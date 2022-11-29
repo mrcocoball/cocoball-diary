@@ -13,7 +13,8 @@
 * Spring Data JPA
 * Querydsl
 * MySQL
-* Javascript / jQuery
+* Thymeleaf
+* JavaScript / Axios / Ajax
 * GitKraken
 * AWS RDS / EC2 </br></br>
 
