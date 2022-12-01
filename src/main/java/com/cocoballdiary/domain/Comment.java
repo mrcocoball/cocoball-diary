@@ -52,7 +52,7 @@ public class Comment extends AuditingFields {
 
     }
 
-    public Comment of(User user, Article article, String description, Long score) {
+    public static Comment of(User user, Article article, String description, Long score) {
         return new Comment(user, article, description, score);
     }
 
