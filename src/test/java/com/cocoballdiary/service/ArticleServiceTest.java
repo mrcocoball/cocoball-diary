@@ -27,7 +27,7 @@ public class ArticleServiceTest {
                 1L
         );
 
-        log.info(articleService.createArticle(articleDto));
+        log.info(articleService.writeArticle(articleDto));
 
     }
 
