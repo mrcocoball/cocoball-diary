@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "Article", description = "[GET] 게시글 단건 조회")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public ArticleDto getArticle(Long aid) {
 
@@ -45,10 +47,14 @@ public class ArticleController {
 
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/write")
+    public void writeGET() {}
+
     @Operation(summary = "Article POST", description = "[POST] 게시글 작성")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> createArticle(@Valid @RequestBody ArticleDto articleDto,
-                                           BindingResult bindingResult) throws BindException {
+    @PostMapping(value = "/write", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> writeArticle(@Valid @RequestBody ArticleDto articleDto,
+                                          BindingResult bindingResult) throws BindException {
 
         log.info(articleDto);
 
@@ -58,7 +64,24 @@ public class ArticleController {
 
         Map<String, Long> resultMap = new HashMap<>();
 
-        Long aid = articleService.createArticle(articleDto);
+        Long aid = articleService.writeArticle(articleDto);
+
+        resultMap.put("aid", aid);
+
+        return resultMap;
+
+    }
+
+    @Operation(summary = "Article MODIFY", description = "[PUT] 게시글 수정")
+    @PreAuthorize("principal.username == #articleDto.uid")
+    @PutMapping(value = "/{aid}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> modifyArticle(@PathVariable("aid") Long aid, @RequestBody ArticleDto articleDto) {
+
+        articleDto.setAid(aid); // 번호 일치
+
+        articleService.modifyArticle(articleDto);
+
+        Map<String, Long> resultMap = new HashMap<>();
 
         resultMap.put("aid", aid);
 
@@ -67,6 +90,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "Article DELETE", description = "[DELETE] 게시글 삭제")
+    @PreAuthorize("principal.username == #articleDto.uid")
     @DeleteMapping("/{aid}")
     public Map<String, Long> deleteArticle(@PathVariable("aid") Long aid) {
 

@@ -48,7 +48,13 @@ public class ArticleService {
 				.build();
 	}
 
-	public Long createArticle(ArticleDto articleDto) {
+	public ArticleDto getArticle(Long aid) {
+		return articleRepository.findByAid(aid).map(ArticleDto::from)
+									.orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
+
+	}
+
+	public Long writeArticle(ArticleDto articleDto) {
 
 		User user = userRepository.getReferenceById(articleDto.getUid());
 		Long aid = articleRepository.save(articleDto.toEntity(user)).getAid();
@@ -57,10 +63,17 @@ public class ArticleService {
 
 	}
 
-	public ArticleDto getArticle(Long aid) {
-		return articleRepository.findByAid(aid).map(ArticleDto::from)
+	public void modifyArticle(ArticleDto articleDto) {
+
+		Article article = articleRepository.findByAid(articleDto.getAid())
 									.orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
 
+		article.setTitle(articleDto.getTitle());
+		article.setDescription(articleDto.getDescription());
+
+		// TODO: 평점 수정, 장소 지도 정보 수정 기능 추후 구현 필요
+
+		articleRepository.save(article);
 	}
 
 	public void deleteArticle(Long aid) {
