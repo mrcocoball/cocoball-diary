@@ -1,15 +1,19 @@
 package com.cocoballdiary.domain;
 
+import com.cocoballdiary.domain.constrant.UserRole;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "roleSet")
 @Table(indexes = {
         @Index(columnList = "email"),
         @Index(columnList = "createdAt")
@@ -22,21 +26,21 @@ public class User extends AuditingFields {
     @Column(length = 50)
     private String uid;
 
-    @Setter
     @Column(nullable = false)
     private String password;
 
-    @Setter
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Setter
     @Column
     private boolean deleted;
 
-    @Setter
     @Column
     private boolean social;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<UserRole> roleSet = new HashSet<>();
 
 
     protected User() {
@@ -53,6 +57,30 @@ public class User extends AuditingFields {
 
     public static User of(String uid, String password, String email, boolean deleted, boolean social) {
         return new User(uid, password, email, deleted, social);
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changeDelete(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public void addRole(UserRole userRole) {
+        this.roleSet.add(userRole);
+    }
+
+    public void clearRoles() {
+        this.roleSet.clear();
+    }
+
+    public void changeSocial(boolean social) {
+        this.social = social;
     }
 
     @Override
