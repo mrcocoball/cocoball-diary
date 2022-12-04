@@ -26,5 +26,23 @@ spring:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
   sql.init.mode: always
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            user-name-attribute: id
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+        registration:
+          kakao:
+            client-name: kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
+            client-id: b713275a0afa2199a3125d7b2aadf725
+            client-secret: rxVc2xcLAwmFyN8bq2yTIOIT2CTHxZhf
+            client-authentication-method: POST
+            scope: profile_nickname, account_email
 
 ---
