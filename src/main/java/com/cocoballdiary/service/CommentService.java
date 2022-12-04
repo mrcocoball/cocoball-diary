@@ -1,6 +1,8 @@
 package com.cocoballdiary.service;
 
+import com.cocoballdiary.domain.Article;
 import com.cocoballdiary.domain.Comment;
+import com.cocoballdiary.domain.User;
 import com.cocoballdiary.dto.CommentDto;
 import com.cocoballdiary.dto.PageRequestDto;
 import com.cocoballdiary.dto.PageResponseDto;
@@ -53,6 +55,32 @@ public class CommentService {
         return commentRepository.findByCid(cid).map(CommentDto::from)
                                     .orElseThrow(() -> new DiaryException(ErrorCode.COMMENT_NOT_FOUND));
 
+    }
+
+    public Long writeComment(CommentDto commentDto) {
+
+        Article article = articleRepository.getReferenceById(commentDto.getAid());
+        User user = userRepository.getReferenceById(commentDto.getUid());
+        Long cid = commentRepository.save(commentDto.toEntity(user, article)).getCid();
+
+        return cid;
+    }
+
+    public void modifyComment(CommentDto commentDto) {
+
+        Comment comment = commentRepository.findByCid(commentDto.getCid())
+                                    .orElseThrow(() -> new DiaryException(ErrorCode.COMMENT_NOT_FOUND));
+
+        comment.setDescription(commentDto.getDescription());
+
+        // TODO: 평점 수정 기능 추후 구현 필요
+
+        commentRepository.save(comment);
+
+    }
+
+    public void deleteComment(Long cid) {
+        commentRepository.deleteByCid(cid);
     }
 
 }
