@@ -7,11 +7,11 @@
 
 * Java
 * Spring Boot
-* Spring Data REST
-* Swagger UI
 * Spring Security
 * Spring Properties DevTools
 * Spring Data JPA
+* Spring Data REST
+* Swagger UI
 * Querydsl
 * MySQL
 * Thymeleaf
