@@ -15,7 +15,7 @@
 * Querydsl
 * MySQL
 * Thymeleaf
-* JavaScript / Axios / Ajax
+* JavaScript
 * GitKraken
 * AWS RDS / EC2 </br></br>
 
