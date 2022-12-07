@@ -34,7 +34,7 @@ public class ArticleService {
 		// 페이징 처리
 		Pageable pageable = PageRequest.of(pageRequestDto.getPage() <=0? 0 : pageRequestDto.getPage() -1,
 				pageRequestDto.getSize(),
-				Sort.by("aid").ascending());
+				Sort.by("aid").descending());
 
 		Page<Article> result = articleRepository.findAll(pageable);
 
