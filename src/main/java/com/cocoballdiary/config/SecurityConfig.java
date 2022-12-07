@@ -32,14 +32,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.formLogin().loginPage("/user/login");
+        http.formLogin().loginPage("/user/login").and().logout().logoutSuccessUrl("/");
+
         http.csrf().disable();
 
-        http.rememberMe()
+        /* http.rememberMe()
                 .key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30);
+                .tokenValiditySeconds(60*60*24*30); */
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()); // 403 에러 처리
 
