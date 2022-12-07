@@ -15,9 +15,9 @@
 <main class="form-signin w-100 m-auto">
   <h1 class="h3 mb-3 fw-normal">회원 정보 수정</h1>
 
-  <form id="registerForm" action="/user/join" method="post">
+  <form id="registerForm" th:action="@{/user/modify}" method="post">
     <div class="form-floating">
-      <input type="text" class="form-control" name="uid" id="floatingInput" placeholder="USER ID">
+      <input type="text" class="form-control" name="uid" id="floatingInput" th:value="${dto.uid}" readonly>
       <label for="floatingInput">아이디</label>
     </div>
 
@@ -27,7 +27,7 @@
     </div>
 
     <div class="form-floating">
-      <input type="email" class="form-control" name="email" id="floatingEmail" placeholder="EMAIL">
+      <input type="email" class="form-control" name="email" id="floatingEmail" th:value="${dto.email}">
       <label for="floatingPassword">이메일</label>
     </div>
 
@@ -40,16 +40,4 @@
   </form>
 </main>
 </body>
-
-<script layout:fragment="script" th:inline="javascript">
-
-    const error = [[${error}]]
-
-    if (error && error === 'mid') {
-        alert("동일한 MID를 가진 계정이 존재합니다.")
-    }
-
-
-</script>
-
 </html>
