@@ -7,10 +7,6 @@ html, body {
     width: 100%;
 }
 
-.container-write {
-    max-width: 960px;
-}
-
 .mainheader {
     background-color: rebeccapurple;
 }
