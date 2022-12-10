@@ -10,15 +10,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @Tag(name = "ArticleController")
 @RequiredArgsConstructor
 @RequestMapping("/diary")
@@ -29,21 +31,21 @@ public class ArticleController {
 
     @Operation(summary = "Article List", description = "[GET] 게시글 리스트 조회")
     @GetMapping("/list")
-    public PageResponseDto<ArticleDto> getArticleList(PageRequestDto pageRequestDto) {
+    public void getArticleList(PageRequestDto pageRequestDto, Model model) {
 
         PageResponseDto<ArticleDto> responseDto = articleService.getArticleList(pageRequestDto);
 
-        return responseDto;
+        model.addAttribute("responseDto", responseDto);
     }
 
     @Operation(summary = "Article", description = "[GET] 게시글 단건 조회")
     @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
-    public ArticleDto getArticle(Long aid) {
+    public void getArticle(Long aid, PageRequestDto pageRequestDto, Model model) {
 
         ArticleDto articleDto = articleService.getArticle(aid);
 
-        return articleDto;
+        model.addAttribute("dto", articleDto);
 
     }
 
@@ -52,55 +54,69 @@ public class ArticleController {
     public void writeGET() {}
 
     @Operation(summary = "Article POST", description = "[POST] 게시글 작성")
-    @PostMapping(value = "/write", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> writeArticle(@Valid @RequestBody ArticleDto articleDto,
-                                          BindingResult bindingResult) throws BindException {
+    @PostMapping("/write")
+    public String writeArticle(@Valid ArticleDto articleDto,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
 
         log.info(articleDto);
 
         if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
+            log.error("has errors");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/diary/list";
         }
-
-        Map<String, Long> resultMap = new HashMap<>();
 
         Long aid = articleService.writeArticle(articleDto);
 
-        resultMap.put("aid", aid);
+        redirectAttributes.addFlashAttribute("result", aid);
 
-        return resultMap;
+        return "redirect:/diary/list";
 
     }
 
-    @Operation(summary = "Article MODIFY", description = "[PUT] 게시글 수정")
+    @Operation(summary = "Article MODIFY", description = "[POST] 게시글 수정")
     @PreAuthorize("principal.username == #articleDto.uid")
-    @PutMapping(value = "/{aid}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> modifyArticle(@PathVariable("aid") Long aid, @RequestBody ArticleDto articleDto) {
+    @PostMapping("/modify")
+    public String modifyArticle(@Valid ArticleDto articleDto,
+                                BindingResult bindingResult,
+                                PageRequestDto pageRequestDto,
+                                RedirectAttributes redirectAttributes) {
 
-        articleDto.setAid(aid); // 번호 일치
+        log.info(articleDto);
+
+        if (bindingResult.hasErrors()) {
+            log.error("has errors");
+            String link = pageRequestDto.getLink();
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("aid", articleDto.getAid());
+
+            return "redirect:/diary/modify?" + link;
+        }
 
         articleService.modifyArticle(articleDto);
 
-        Map<String, Long> resultMap = new HashMap<>();
+        redirectAttributes.addFlashAttribute("result", "modified");
 
-        resultMap.put("aid", aid);
+        redirectAttributes.addAttribute("aid", articleDto.getAid());
 
-        return resultMap;
+        return "redirect:/diary/read";
 
     }
 
     @Operation(summary = "Article DELETE", description = "[DELETE] 게시글 삭제")
-    @PreAuthorize("principal.username == #articleDto.uid")
-    @DeleteMapping("/{aid}")
-    public Map<String, Long> deleteArticle(@PathVariable("aid") Long aid) {
+    @PostMapping("/delete")
+    public String deleteArticle(Long aid, RedirectAttributes redirectAttributes) {
+
+        log.info("delete...");
 
         articleService.deleteArticle(aid);
 
-        Map<String, Long> resultMap = new HashMap<>();
+        // TODO: 게시물 내 첨부 파일 삭제 추가 필요
 
-        resultMap.put("aid", aid);
+        redirectAttributes.addFlashAttribute("result", "removed");
 
-        return resultMap;
+        return "redirect:/diary/list";
 
     }
 

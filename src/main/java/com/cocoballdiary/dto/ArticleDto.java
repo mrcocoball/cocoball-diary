@@ -29,7 +29,7 @@ public class ArticleDto {
     private String description;
 
     @Max(5)
-    @NotNull
+    // @NotNull
     private Long score;
 
     private Long count;
