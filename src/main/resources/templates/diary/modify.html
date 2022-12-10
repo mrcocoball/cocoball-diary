@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layout/basic2.html}">
 
 <div layout:fragment="content">
 
@@ -105,26 +105,24 @@
       const formObj = document.querySelector("#mf")
 
       document.querySelector(".listBtn").addEventListener("click", function (e) {
-          e.preventDefault()
-          e.stopPropagation()
+        e.preventDefault()
+        e.stopPropagation()
 
-          alert("게시글 리스트 이동")
-
-          formObj.reset()
-          self.location = `/diary/list?${link}`
+        formObj.reset()
+        self.location = `/diary/list?${link}`
 
       }, false)
 
       document.querySelector(".modifyBtn").addEventListener("click", function (e) {
-          e.preventDefault()
-          e.stopPropagation()
+        e.preventDefault()
+        e.stopPropagation()
 
-          alert("게시글 수정")
+        alert("게시글이 수정되었습니다.")
 
-          formObj.action = `/diary/modify?${link}`
+        formObj.action = `/diary/modify?${link}`
 
-          formObj.method = 'post'
-          formObj.submit()
+        formObj.method = 'post'
+        formObj.submit()
 
       }, false)
 
