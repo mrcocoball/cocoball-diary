@@ -10,9 +10,9 @@
       <p class="lead">장소명과 주소를 입력하고 리뷰, 사진을 올려주세요!</p>
     </div>
 
+    <form class="needs-validation" novalidate action="/diary/write" method="post">
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
-        <form class="needs-validation" novalidate action="/diary/write" method="post">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text">장소 정보</span>
           </h4>
@@ -20,13 +20,19 @@
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">장소명</h6>
-                <input type="text" class="form-control" placeholder="장소명">
+                <input type="text" class="form-control" placeholder="장소명" required>
+                <div class="invalid-feedback">
+                  장소명을 적어주세요.
+                </div>
               </div>
             </li>
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">주소</h6>
-                <input type="text" class="form-control" placeholder="주소">
+                <input type="text" class="form-control" placeholder="주소" required>
+                <div class="invalid-feedback">
+                  주소를 적어주세요.
+                </div>
               </div>
             </li>
             <li class="list-group-item" id="place-star">
@@ -49,15 +55,15 @@
         <div class="row g-3">
           <div class="col-12">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" name="title" placeholder="" value="" required>
+            <input type="text" class="form-control" name="title" id="title" placeholder="" value="" required>
             <div class="invalid-feedback">
               제목을 적어주세요.
             </div>
           </div>
 
           <div class="col-12">
-            <label for="descripiton" class="form-label">내용</label>
-            <textarea class="form-control" name="description" rows="5" placeholder="" value="" required></textarea>
+            <label for="description" class="form-label">내용</label>
+            <textarea class="form-control" name="description" id="description" rows="5" placeholder="" value="" required></textarea>
             <div class="invalid-feedback">
               내용을 적어주세요.
             </div>
@@ -72,13 +78,15 @@
 
           <div class="col-12">
             <label for="uid" class="form-label">작성자</label>
-            <input type="text" class="form-control" name="uid" placeholder=""
+            <input type="text" class="form-control" name="uid" id="uid" placeholder=""
                    th:value="${#authentication.principal.username}" readonly>
           </div>
 
           <button class="w-100 btn btn-primary btn-lg" type="submit">저장</button>
         </div>
-        </form>
       </div><!--end card body-->
     </div>
+    </form>
   </div>
+
+  <script src="/js/form-validation.js"></script>
