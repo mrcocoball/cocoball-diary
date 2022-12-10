@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <meta name="description" content="">
+  <meta name="author" content="mrcocoball">
+  <title>Cocoball Diary</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link href="/css/layout.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Top Navigation -->
+<div id="wrapper">
+  <div id="page-content-wrapper">
+    <header class="p-3 mainheader">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+            <img src="/images/logo.png"/>
+          </a>
+
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          </ul>
+
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+            <a></a>
+          </form>
+
+          <div class="text-end">
+            <button sec:authorize="!isAuthenticated()" type="button" onclick="location.href='/user/login';" class="btn btn-outline-light me-2" id="login">로그인</button>
+            <button sec:authorize="isAuthenticated()" type="button" onclick="location.href='/logout';" class="btn btn-dark me-2" id="logout">로그아웃</button>
+            <button sec:authorize="!isAuthenticated()" type="button" onclick="location.href='/user/join';" class="btn btn-warning" id="join">회원가입</button>
+            <button sec:authorize="isAuthenticated()" type="button" onclick="location.href='/user/modify';"class="btn btn-warning" id="modify">정보수정</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- content -->
+    <div class="container" layout:fragment="content">
+
+    </div>
+  </div>
+</div>
+<!-- Bootstrap -->
+
+
+</body>
+
+<!-- Javascript 영역 -->
+
+<script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+        crossorigin="anonymous"></script>
+
+</html>
