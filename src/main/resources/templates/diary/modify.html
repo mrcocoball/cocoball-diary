@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+
+  <div class="container-write">
+    <div class="py-5 text-center">
+      <p class="lead">장소명과 주소를 입력하고 리뷰, 사진을 올려주세요!</p>
+    </div>
+
+    <div class="row g-5">
+      <div class="col-md-5 col-lg-4 order-md-last">
+        <form class="needs-validation" novalidate th:action="@{/diary/modify}" method="post" id="mf">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text">장소 정보</span>
+          </h4>
+          <ul class="list-group mb-3">
+            <li class="list-group-item">
+              <div>
+                <h6 class="my-0">장소명</h6>
+                <input type="text" class="form-control" placeholder="장소명" readonly>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div>
+                <h6 class="my-0">주소</h6>
+                <input type="text" class="form-control" placeholder="주소" readonly>
+              </div>
+            </li>
+            <li class="list-group-item" id="place-star">
+              <div>
+                <h6 class="my-0">평점</h6>
+                <fieldset>
+                  <input type="radio" name="score" value=5 id="rate1" th:checked="${dto.score eq 5}"><label
+                    for="rate1">★</label></input>
+                  <input type="radio" name="score" value=4 id="rate2" th:checked="${dto.score eq 4}"><label
+                    for="rate2">★</label></input>
+                  <input type="radio" name="score" value=3 id="rate3" th:checked="${dto.score eq 3}"><label
+                    for="rate3">★</label></input>
+                  <input type="radio" name="score" value=2 id="rate4" th:checked="${dto.score eq 2}"><label
+                    for="rate4">★</label></input>
+                  <input type="radio" name="score" value=1 id="rate5" th:checked="${dto.score eq 1}"><label
+                    for="rate5">★</label></input>
+                </fieldset>
+              </div>
+            </li>
+          </ul>
+      </div>
+
+      <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">게시글 작성</h4>
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="" th:value="${dto.title}">
+            <div class="invalid-feedback">
+              제목을 적어주세요.
+            </div>
+          </div>
+
+          <div class="col-12">
+            <span class="input-group-text">사진</span>
+          </div>
+
+          <div class="col-12">
+            <label for="descripiton" class="form-label">내용</label>
+            <textarea class="form-control" name="description" id="descripiton" rows="5" placeholder=""
+                      value="">[[${dto.description}]]</textarea>
+            <div class="invalid-feedback">
+              내용을 적어주세요.
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="uid" class="form-label">작성자</label>
+            <input type="text" class="form-control" name="uid" id="uid" placeholder=""
+                   th:value="${dto.uid}" readonly>
+          </div>
+
+          <div>
+            <label for="aid" class="form-label">게시글 번호</label>
+            <input type="text" class="form-control" name="aid" id="aid" placeholder=""
+                   th:value="${dto.aid}" readonly>
+          </div>
+
+          <div class="col-12">
+            <div class="float-end">
+              <button type="button" class="btn btn-primary listBtn">게시글 목록으로</button>
+              <button type="button" class="btn btn-secondary modifyBtn">게시글 수정</button>
+              <button type="button" class="btn btn-danger deleteBtn">게시글 삭제</button>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div><!--end card body-->
+    </div>
+  </div>
+
+
+  <script layout:fragment="script" th:inline="javascript">
+
+      const link = [[${pageRequestDto.getLink()}]]
+      const formObj = document.querySelector("#mf")
+
+      document.querySelector(".listBtn").addEventListener("click", function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          alert("게시글 리스트 이동")
+
+          formObj.reset()
+          self.location = `/diary/list?${link}`
+
+      }, false)
+
+      document.querySelector(".modifyBtn").addEventListener("click", function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          alert("게시글 수정")
+
+          formObj.action = `/diary/modify?${link}`
+
+          formObj.method = 'post'
+          formObj.submit()
+
+      }, false)
+
+  </script>
