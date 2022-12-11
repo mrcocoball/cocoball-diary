@@ -23,7 +23,7 @@ public class Comment extends AuditingFields {
 
     @Setter
     @Column(length = 1000, nullable = false)
-    private String description;
+    private String commentDescription;
 
     @Setter
     @Column(nullable = false)
@@ -43,17 +43,17 @@ public class Comment extends AuditingFields {
     protected Comment() {
     }
 
-    private Comment(User user, Article article, String description, Long score) {
+    private Comment(User user, Article article, String commentDescription, Long score) {
 
         this.user = user;
         this.article = article;
-        this.description = description;
+        this.commentDescription = commentDescription;
         this.score = score;
 
     }
 
-    public static Comment of(User user, Article article, String description, Long score) {
-        return new Comment(user, article, description, score);
+    public static Comment of(User user, Article article, String commentDescription, Long score) {
+        return new Comment(user, article, commentDescription, score);
     }
 
     @Override

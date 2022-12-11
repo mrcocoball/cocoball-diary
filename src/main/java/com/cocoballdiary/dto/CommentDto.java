@@ -18,18 +18,18 @@ import java.time.LocalDateTime;
 public class CommentDto {
 
     @NotNull
-    private String uid;
+    private String commentUid;
 
-    @NotNull
+    // @NotNull
     private Long aid;
 
     private Long cid;
 
     @NotEmpty
-    private String description;
+    private String commentDescription;
 
     @Max(5)
-    @NotNull
+    // @NotNull
     private Long score;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -38,18 +38,18 @@ public class CommentDto {
     @JsonIgnore
     private LocalDateTime modifiedAt;
 
-    private CommentDto(String uid, Long aid, Long cid, String description, Long score, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.uid = uid;
+    private CommentDto(String commentUid, Long aid, Long cid, String commentDescription, Long score, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.commentUid = commentUid;
         this.aid = aid;
         this.cid = cid;
-        this.description = description;
+        this.commentDescription = commentDescription;
         this.score = score;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public static CommentDto of(String uid, Long aid, Long cid, String description, Long score, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        return new CommentDto(uid, aid, cid, description, score, createdAt, modifiedAt);
+    public static CommentDto of(String commentUid, Long aid, Long cid, String commentDescription, Long score, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        return new CommentDto(commentUid, aid, cid, commentDescription, score, createdAt, modifiedAt);
     }
 
     // Request를 통한 생성 시
@@ -64,7 +64,7 @@ public class CommentDto {
                 entity.getUser().getUid(),
                 entity.getArticle().getAid(),
                 entity.getCid(),
-                entity.getDescription(),
+                entity.getCommentDescription(),
                 entity.getScore(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
@@ -76,7 +76,7 @@ public class CommentDto {
         return Comment.of(
                 user,
                 article,
-                description,
+                commentDescription,
                 score
         );
     }

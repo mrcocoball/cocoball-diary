@@ -60,7 +60,7 @@ public class CommentService {
     public Long writeComment(CommentDto commentDto) {
 
         Article article = articleRepository.getReferenceById(commentDto.getAid());
-        User user = userRepository.getReferenceById(commentDto.getUid());
+        User user = userRepository.getReferenceById(commentDto.getCommentUid());
         Long cid = commentRepository.save(commentDto.toEntity(user, article)).getCid();
 
         return cid;
@@ -71,7 +71,7 @@ public class CommentService {
         Comment comment = commentRepository.findByCid(commentDto.getCid())
                                     .orElseThrow(() -> new DiaryException(ErrorCode.COMMENT_NOT_FOUND));
 
-        comment.setDescription(commentDto.getDescription());
+        comment.setCommentDescription(commentDto.getCommentDescription());
 
         // TODO: 평점 수정 기능 추후 구현 필요
 
