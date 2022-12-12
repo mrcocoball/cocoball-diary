@@ -15,7 +15,6 @@
           <p class="lead text-muted">간편하게 가입, 로그인해서 자랑하고 싶은 사진과 소개, 위치, 평점을 쉽게 남기고 공유해요.</p>
           <p>
             <a href="/diary/write" class="btn btn-primary my-2">장소 남기기</a>
-            <a href="#" class="btn btn-secondary my-2">Secondary action</a>
           </p>
           <form action="/board/list" method="get">
             <div class="col">
@@ -23,7 +22,6 @@
               <div class="input-group">
                 <div class="input-group-prepend">
                   <select class="form-select" name="type">
-                    <option value="">　　　</option>
                     <option value="t" th:selected="${pageRequestDto.type =='t'}">제목</option>
                     <option value="c" th:selected="${pageRequestDto.type =='d'}">내용</option>
                     <option value="w" th:selected="${pageRequestDto.type =='w'}">작성자</option>
@@ -58,8 +56,8 @@
                 <p class="card-text">#[[${dto.aid}]] [[${dto.title}]]</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary"><a
-                        th:href="|@{/diary/read(aid =${dto.aid})}|">보기</a></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary"><a th:href="|@{/diary/read(aid =${dto.aid})}|">보기</a></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">&#10029;[[${dto.score}]]</button>
                   </div>
                   <small class="text-muted">[[${dto.uid}]] · [[${#temporals.format(dto.createdAt,
                     'yyyy-MM-dd')}]]</small>

@@ -19,13 +19,13 @@
           <li class="list-group-item">
             <div>
               <h6 class="my-0">장소명</h6>
-              <input type="text" class="form-control" placeholder="장소명" readonly>
+              <input type="text" class="form-control" placeholder="장소명" th:value="${dto.placename}" readonly>
             </div>
           </li>
           <li class="list-group-item">
             <div>
               <h6 class="my-0">주소</h6>
-              <input type="text" class="form-control" placeholder="주소" readonly>
+              <input type="text" class="form-control" placeholder="주소" th:value="${dto.address}" readonly>
             </div>
           </li>
           <li class="list-group-item" id="place-star">
