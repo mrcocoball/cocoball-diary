@@ -39,11 +39,11 @@ public class Article extends AuditingFields {
 
     @Setter
     @Column
-    private Long count;
+    private String placename;
 
     @Setter
     @Column
-    private Long totalScore;
+    private String address;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,19 +62,18 @@ public class Article extends AuditingFields {
     protected Article() {
     }
 
-    private Article(User user, String title, String description, Long score, Long count, Long totalScore) {
+    private Article(User user, String title, String description, Long score, String placename, String address) {
 
         this.user = user;
         this.title = title;
         this.description = description;
         this.score = score;
-        this.count = count;
-        this.totalScore = totalScore;
-
+        this.placename = placename;
+        this.address = address;
     }
 
-    public static Article of(User user, String title, String description, Long score, Long count, Long totalScore) {
-        return new Article(user, title, description, score, count, totalScore);
+    public static Article of(User user, String title, String description, Long score, String placename, String address) {
+        return new Article(user, title, description, score, placename, address);
     }
 
     @Override
