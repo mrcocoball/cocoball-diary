@@ -31,7 +31,7 @@ async function modifyComment(commentObj) {
     return response.data
 }
 
-async function removeReply(cid) {
+async function removeComment(cid) {
 
     const response = await axios.delete(`/comments/${cid}`)
     return response.data

@@ -69,7 +69,6 @@ public class CommentController {
     }
 
     @Operation(summary = "Comment MODIFY", description = "[PUT] 덧글 수정")
-    @PreAuthorize("principal.username == #commentDto.uid")
     @PutMapping(value = "/{cid}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Long> modifyComment(@PathVariable("cid") Long cid, @RequestBody CommentDto commentDto) {
 
@@ -86,7 +85,6 @@ public class CommentController {
     }
 
     @Operation(summary = "Comment DELETE", description = "[DELETE] 덧글 삭제")
-    @PreAuthorize("principal.username == #commentDto.uid")
     @DeleteMapping("/{cid}")
     public Map<String, Long> deleteComment(@PathVariable("cid") Long cid) {
 
