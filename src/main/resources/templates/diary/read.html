@@ -65,8 +65,8 @@
           </div>
 
           <div class="col-12">
-            <label for="descripiton" class="form-label">내용</label>
-            <textarea class="form-control" name="description" id="descripiton" rows="5" placeholder="" value=""
+            <label for="description" class="form-label">내용</label>
+            <textarea class="form-control" name="description" id="description" rows="5" placeholder="" value=""
                       readonly>[[${dto.description}]]</textarea>
             <div class="invalid-feedback">
               내용을 적어주세요.
@@ -86,12 +86,12 @@
                 <button type="button" class="btn btn-secondary">게시글 수정</button>
               </a>
               <a th:if="${user != null && user.username == dto.uid}">
-                <button type="button" class="btn btn-danger deleteBtn">게시글 삭제</button>
+                <button type="button" th:if="${user != null && user.username == dto.uid}" class="btn btn-danger deleteBtn">게시글 삭제</button>
               </a>
               <a th:href="|@{/diary/list}?${link}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">게시글 목록으로</button>
+                <button type="button" class="btn btn-primary">게시글 목록</button>
               </a>
-              <button class="btn btn-info addCommentBtn">덧글 작성</button>
+              <button class="btn btn-info addCommentBtn">댓글 작성</button>
             </div>
           </div>
 
@@ -120,16 +120,16 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">덧글 등록</h5>
+          <h5 class="modal-title">댓글 등록 (최대 100자)</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">덧글 내용</span>
+            <span class="input-group-text">댓글 내용</span>
             <input type="text" class="form-control commentDescription">
           </div>
           <div class="input-group mb-3" th:with="user=${#authentication.principal}">
-            <span class="input-group-text">작성자</span>
+            <span class="input-group-text">작성자　</span>
             <input type="text" class="form-control commentUid" th:value="${user.username}" readonly>
           </div>
         </div>
@@ -151,8 +151,8 @@
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">덧글 내용</span>
-            <input type="text" class="form-control modify-comment-description">
+            <span class="input-group-text">댓글 내용</span>
+            <input type="text" class="form-control modifyCommentDescription">
           </div>
         </div>
         <div class="modal-footer">
@@ -176,34 +176,39 @@
 
       const aid = [[${dto.aid}]]
       const link = [[${pageRequestDto.getLink()}]]
+      const currentUser = [[${#authentication.principal.username}]]
 
-      // 덧글 관련 처리
+      // 댓글 관련 처리
       const commentList = document.querySelector('.commentList') //댓글 목록 DOM
       const commentPaging = document.querySelector('.commentPaging') //페이지 목록 DOM
 
       // 초기 화면 로딩 시
-      window.onload = function(){
+      window.onload = function () {
 
-          printReplies(1, 10, true)
+          printComments(1, 10, true)
 
       }
 
       // 게시글 삭제
-      document.querySelector(".deleteBtn").addEventListener("click", function (e) {
-        e.preventDefault()
-        e.stopPropagation()
+      // thymeleaf 조건문으로 인해 deleteBtn이 출력되지 않을 수 있어 null check를 해야 함
+      // (안 그러면 addEventListener null 처리되어 전체 JS 코드가 실행되지 않는다)
+      if (document.querySelector(".deleteBtn") != null) {
+          document.querySelector(".deleteBtn").addEventListener("click", function (e) {
+              e.preventDefault()
+              e.stopPropagation()
 
-        $.post('/diary/delete', {aid : aid})
+              $.post('/diary/delete', {aid: aid})
 
-        alert("게시글이 삭제되었습니다.")
+              alert("게시글이 삭제되었습니다.")
 
-        $.get('/diary/list')
+              $.get('/diary/list')
 
-        location.href = "/diary/list"
+              location.href = "/diary/list"
 
-      }, false)
+          }, false)
+      }
 
-      // 덧글 목록
+      // 댓글 목록
       function printList(dtoList) {
           let str = '';
 
@@ -212,9 +217,9 @@
               for (const dto of dtoList) {
 
                   str += `<li class="list-group-item d-flex commentItem">
-                           <span class="col-2">${dto.cid}</span>
+                           <span class="col-1">${dto.cid}</span>
                            <span class="col-6" data-cid="${dto.cid}">${dto.commentDescription}</span>
-                           <span class="col-2">${dto.commentUid}</span>
+                           <span class="col-3">${dto.commentUid}</span>
                            <span class="col-2">${dto.createdAt} </span>
                          </li>`
               }
@@ -222,7 +227,8 @@
           commentList.innerHTML = str
       }
 
-      //페이지 버튼 출력
+
+      // 페이지 버튼 출력
       function printPages(data) {
 
           //pagination
@@ -243,8 +249,9 @@
           commentPaging.innerHTML = pageStr
       }
 
-      // 덧글 리스트 + 페이지 버튼 출력
-      function printReplies(page, size, goLast) {
+
+      // 댓글 리스트 + 페이지 버튼 출력
+      function printComments(page, size, goLast) {
 
           getList({aid, page, size, goLast}).then(
               data => {
@@ -257,39 +264,44 @@
 
       }
 
-      //댓글 등록 관련
+
+      // 댓글 등록 관련
       const writeModal = new bootstrap.Modal(document.querySelector(".writeModal"))
-      //registerModel
       const writeBtn = document.querySelector(".writeBtn")
       const commentDescription = document.querySelector(".commentDescription")
       const commentUid = document.querySelector(".commentUid")
       const closeWriteBtn = document.querySelector(".closeWriteBtn")
 
+
       // 댓글 등록 버튼 클릭 시 댓글 등록 모달 표시
-      document.querySelector(".addCommentBtn").addEventListener("click", function (e){
+      document.querySelector(".addCommentBtn").addEventListener("click", function (e) {
           console.log("모달 출력")
           writeModal.show()
-      },false)
+      }, false)
+
 
       // 댓글 등록 취소 버튼 클릭 시 모달 숨기기
-      closeWriteBtn.addEventListener("click", function (e){
+      closeWriteBtn.addEventListener("click", function (e) {
           console.log("모달 숨기기")
           writeModal.hide()
-      },false)
+      }, false)
+
 
       // 등록 버튼 클릭 시
-      writeBtn.addEventListener("click", function(e){
+      writeBtn.addEventListener("click", function (e) {
+          console.log("버튼 클릭")
           const commentObj = {
-              aid:aid,
-              commentDescription:commentDescription.value,
-              commentUid:commentUid.value}
+              aid: aid,
+              commentDescription: commentDescription.value,
+              commentUid: commentUid.value
+          }
 
           addComment(commentObj).then(result => {
-              alert(result.cid)
+              console.log(result)
+              alert("댓글이 작성되었습니다.")
               writeModal.hide()
               commentDescription.value = ''
-              commentUid.value =''
-              printReplies(1,10, true) //댓글 목록 갱신
+              printComments(1, 10, true) //댓글 목록 갱신
           }).catch(e => {
               alert("Exception...")
           })
@@ -299,23 +311,129 @@
       let page = 1
       let size = 10
 
-      // 덧글 리스트 페이징 갱신
-      commentPaging.addEventListener("click", function (e){
+
+      // 댓글 리스트 페이징 갱신
+      commentPaging.addEventListener("click", function (e) {
 
           e.preventDefault()
           e.stopPropagation()
 
           const target = e.target
 
-          if(!target || target.tagName != 'A'){
+          if (!target || target.tagName != 'A') {
               return
           }
 
           const pageNum = target.getAttribute("data-page")
           page = pageNum
-          printReplies(page, size)
+          printComments(page, size)
 
-      },false)
+      }, false)
 
+
+      // 댓글 수정 관련
+      const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
+
+      const commentHeader = document.querySelector(".commentHeader")
+      const modifyCommentDescription = document.querySelector(".modifyCommentDescription")
+      const modifyBtn = document.querySelector(".modifyBtn")
+      const removeBtn = document.querySelector(".removeBtn")
+      const closeModifyBtn = document.querySelector(".closeModifyBtn")
+
+
+      let hasAuth = false // 댓글의 작성자와 currentUser의 일치 여부
+
+
+      // 댓글 클릭 시 단건 조회
+      commentList.addEventListener("click", function (e) {
+
+          e.preventDefault()
+          e.stopPropagation()
+
+          const target = e.target
+
+          if (!target || target.tagName != 'SPAN') {
+              return
+          }
+
+          const cid = target.getAttribute("data-cid")
+
+          if (!cid) {
+              return
+          }
+
+          getComment(cid).then(comment => { //댓글의 내용을 모달창에 채워서 보여주는
+
+              console.log(comment)
+              commentHeader.innerHTML = comment.cid
+              modifyCommentDescription.value = comment.commentDescription
+              modifyModal.show()
+
+              hasAuth = currentUser === comment.commentUid //댓글의 작성자와 현재 사용자 일치 여부 확인
+
+          }).catch(e => alert('error'))
+
+      }, false)
+
+
+      // 수정 버튼 클릭 시
+      modifyBtn.addEventListener("click", function (e) {
+
+          if (!hasAuth) {
+              alert("댓글 작성자만 수정이 가능합니다.")
+              modifyModal.hide()
+              return
+          }
+
+          const commentObj = {
+              aid: aid,
+              cid: commentHeader.innerHTML,
+              commentDescription: modifyCommentDescription.value
+          }
+
+          modifyComment(commentObj).then(result => {
+              alert("댓글이 수정되었습니다.")
+              commentDescription.value = ''
+              modifyModal.hide()
+              printComments(page, size)
+
+          }).catch(e => {
+              console.log(e)
+          })
+      }, false)
+
+
+      // 수정 취소 버튼 클릭 시
+      closeModifyBtn.addEventListener("click", function (e) {
+
+          modifyModal.hide()
+
+      }, false)
+
+
+      // 댓글 삭제 관련
+      removeBtn.addEventListener("click", function (e) {
+
+          if (!hasAuth) {
+              alert("댓글 작성자만 삭제가 가능합니다.")
+              modifyModal.hide()
+              return
+          }
+
+
+          removeComment(commentHeader.innerHTML).then(result => {
+
+              alert("댓글이 삭제되었습니다.")
+              commentDescription.value = ''
+              modifyModal.hide()
+
+              page = 1 // 이 부분이 없다면 원래 페이지로
+
+              printComments(page, size)
+
+          }).catch(e => {
+              console.log(e)
+          })
+      }, false)
 
   </script>

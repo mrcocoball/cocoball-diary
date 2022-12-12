@@ -22,12 +22,8 @@ public class Comment extends AuditingFields {
     private Long cid;
 
     @Setter
-    @Column(length = 1000, nullable = false)
+    @Column(length = 100, nullable = false)
     private String commentDescription;
-
-    @Setter
-    @Column(nullable = false)
-    private Long score;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,17 +39,15 @@ public class Comment extends AuditingFields {
     protected Comment() {
     }
 
-    private Comment(User user, Article article, String commentDescription, Long score) {
+    private Comment(User user, Article article, String commentDescription) {
 
         this.user = user;
         this.article = article;
         this.commentDescription = commentDescription;
-        this.score = score;
-
     }
 
-    public static Comment of(User user, Article article, String commentDescription, Long score) {
-        return new Comment(user, article, commentDescription, score);
+    public static Comment of(User user, Article article, String commentDescription) {
+        return new Comment(user, article, commentDescription);
     }
 
     @Override
