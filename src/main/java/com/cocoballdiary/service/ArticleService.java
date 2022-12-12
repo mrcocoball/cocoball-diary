@@ -92,8 +92,8 @@ public class ArticleService {
 		article.setTitle(articleDto.getTitle());
 		article.setDescription(articleDto.getDescription());
 		article.setScore(articleDto.getScore());
-
-		// TODO: 평점 수정, 장소 지도 정보 수정 기능 추후 구현 필요
+		article.setPlacename(articleDto.getPlacename());
+		article.setAddress(articleDto.getAddress());
 
 		articleRepository.save(article);
 	}

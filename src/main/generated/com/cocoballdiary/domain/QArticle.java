@@ -24,9 +24,9 @@ public class QArticle extends EntityPathBase<Article> {
 
     public final QAuditingFields _super = new QAuditingFields(this);
 
-    public final NumberPath<Long> aid = createNumber("aid", Long.class);
+    public final StringPath address = createString("address");
 
-    public final NumberPath<Long> count = createNumber("count", Long.class);
+    public final NumberPath<Long> aid = createNumber("aid", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -38,11 +38,11 @@ public class QArticle extends EntityPathBase<Article> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
+    public final StringPath placename = createString("placename");
+
     public final NumberPath<Long> score = createNumber("score", Long.class);
 
     public final StringPath title = createString("title");
-
-    public final NumberPath<Long> totalScore = createNumber("totalScore", Long.class);
 
     public final QUser user;
 

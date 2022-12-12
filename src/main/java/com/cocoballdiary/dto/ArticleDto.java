@@ -29,12 +29,13 @@ public class ArticleDto {
     private String description;
 
     @Max(5)
-    // @NotNull
     private Long score;
 
-    private Long count;
+    @NotEmpty
+    private String placename;
 
-    private Long totalScore;
+    @NotEmpty
+    private String address;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
@@ -42,28 +43,25 @@ public class ArticleDto {
     @JsonIgnore
     private LocalDateTime modifiedAt;
 
-    private ArticleDto(String uid, Long aid, String title, String description, Long score, Long count, Long totalScore, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private ArticleDto(String uid, Long aid, String title, String description, Long score, String placename, String address, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.uid = uid;
         this.aid = aid;
         this.title = title;
         this.description = description;
         this.score = score;
-        this.count = count;
-        this.totalScore = totalScore;
+        this.placename = placename;
+        this.address = address;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public static ArticleDto of(String uid, Long aid, String title, String description, Long score, Long count, Long totalScore, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        return new ArticleDto(uid, aid, title, description, score, count, totalScore, createdAt, modifiedAt);
-    }
+    public static ArticleDto of(String uid, Long aid, String title, String description, Long score, String placename, String address, LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
-    // Request를 통한 생성 시
-    public static ArticleDto initialize(String uid, String title, String description, Long score, Long count) {
+        if (score == null) {
+            score = 0L;
+        }
 
-        Long totalScore = score;
-
-        return new ArticleDto(uid, null, title, description, score, count, totalScore, null, null);
+        return new ArticleDto(uid, aid, title, description, score, placename, address, createdAt, modifiedAt);
     }
 
     // Entity -> Dto
@@ -75,8 +73,8 @@ public class ArticleDto {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getScore(),
-                entity.getCount(),
-                entity.getTotalScore(),
+                entity.getPlacename(),
+                entity.getAddress(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
         );
@@ -84,13 +82,20 @@ public class ArticleDto {
 
     // Dto -> Entity
     public Article toEntity(User user) {
+
+        Long score = this.score;
+
+        if (score == null) {
+            score = 0L;
+        }
+
         return Article.of(
                 user,
                 title,
                 description,
                 score,
-                count,
-                totalScore
+                placename,
+                address
         );
     }
 }
