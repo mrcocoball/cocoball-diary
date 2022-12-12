@@ -31,6 +31,7 @@ public class ArticleService {
 	private final UserRepository userRepository;
 
 
+	/*
 	public PageResponseDto<ArticleDto> getArticleList(PageRequestDto pageRequestDto) {
 
 		// 페이징 처리
@@ -46,6 +47,22 @@ public class ArticleService {
 		return PageResponseDto.<ArticleDto>withAll()
 				.pageRequestDto(pageRequestDto)
 				.dtoList(dtoList)
+				.total((int)result.getTotalElements())
+				.build();
+	}
+	 */
+
+	public PageResponseDto<ArticleDto> getArticleList(PageRequestDto pageRequestDto) {
+
+		String[] types = pageRequestDto.getTypes(); // title, description, uid
+		String keyword = pageRequestDto.getKeyword();
+		Pageable pageable = pageRequestDto.getPageable("aid");
+
+		Page<ArticleDto> result = articleRepository.searchAll(types, keyword, pageable);
+
+		return PageResponseDto.<ArticleDto>withAll()
+				.pageRequestDto(pageRequestDto)
+				.dtoList(result.getContent())
 				.total((int)result.getTotalElements())
 				.build();
 	}
