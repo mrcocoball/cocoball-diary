@@ -20,7 +20,7 @@
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">장소명</h6>
-                <input type="text" class="form-control" name="placename" id="placename" placeholder="장소명" required>
+                <input type="text" class="form-control" name="placeName" id="placeName" placeholder="장소명" required>
                 <div class="invalid-feedback">
                   장소명을 적어주세요.
                 </div>
@@ -82,11 +82,189 @@
                    th:value="${#authentication.principal.username}" readonly>
           </div>
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">저장</button>
+          <button type="submit" class="w-100 btn btn-primary btn-lg">저장</button>
+          <!-- <button type="submit" class="w-100 btn btn-primary btn-lg submitBtn">저장</button> -->
+          <button type="reset" class="w-100 btn btn-outline-dark">초기화</button>
         </div>
       </div><!--end card body-->
     </div>
     </form>
   </div>
 
-  <script src="/js/form-validation.js"></script>
+  <!—- 첨부 파일 섬네일을 보여줄 부분 -->
+  <div class="row mt-3">
+    <div class="col ">
+      <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+      </div>
+    </div>
+  </div>
+
+  <!—- 첨부파일 추가를 위한 모달창 -->
+  <div class="modal uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">사진 업로드</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="file" name="files" class="form-control" accept=".png, .jpeg" multiple>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+          <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/upload.js"></script>
+  <!-- <script src="/js/form-validation.js"></script> -->
+
+
+  <script layout:fragment="script" th:inline="javascript">
+
+      const auth = [[${#authentication.principal}]]
+
+      const errors = [[${errors}]]
+      console.log(errors)
+
+      let errorMsg = ''
+
+      if(errors){
+        for (let i = 0; i < errors.length; i++) {
+          errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+        }
+        alert(errorMsg)
+      }
+
+      // 업로드 모달
+      const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+
+      document.querySelector(".uploadFileBtn").addEventListener("click", function (e) {
+
+          e.stopPropagation()
+          e.preventDefault()
+          uploadModal.show()
+
+      }, false)
+
+
+      // 파일 업로드 버튼 클릭 시
+      document.querySelector(".uploadBtn").addEventListener("click", function (e) {
+
+          // 결과창에 있는 요소를 선택, 몇 개 존재하는지 확인
+          if (document.querySelectorAll(".imageCard").length < 2) {
+
+              const formObj = new FormData();
+
+              const fileInput = document.querySelector("input[name='files']")
+
+              const files = fileInput.files
+
+              console.log(fileInput.files)
+
+              for (let i = 0; i < files.length; i++) {
+                  formObj.append("files", files[i]);
+              }
+
+              uploadToServer(formObj).then(result => {
+                  console.log(result)
+                  //console.log(result)
+                  for (const uploadResult of result) {
+                      showUploadFile(uploadResult)
+                  }
+                  uploadModal.hide()
+              }).catch(e => {
+                  uploadModal.hide()
+              })
+          } else {
+              alert("이미지는 최대 2장까지만 첨부 할 수 있습니다!")
+          }
+      }, false)
+
+
+      // 업로드 결과
+      const uploadResult = document.querySelector(".uploadResult")
+
+      function showUploadFile({uuid, fileName, link}) {
+
+          const str = `<div class="card col-4 imageCard">
+                  <div class="card-header d-flex justify-content-center">
+                      ${fileName}
+                      <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+                  </div>
+                  <div class="card-body">
+                       <img src="/view/${link}" data-src="${uuid + "_" + fileName}" >
+                  </div>
+              </div><!-- card -->`
+
+          uploadResult.innerHTML += str
+      }
+
+      // 파일 삭제
+      function removeFile(uuid, fileName, obj) {
+
+          console.log(uuid)
+          console.log(fileName)
+
+          console.log(obj)
+
+          const targetDiv = obj.closest(".card")
+
+          removeFileToServer(uuid, fileName).then(data => {
+              targetDiv.remove()
+          })
+      }
+
+      // 게시글 저장 버튼 클릭 시
+      document.querySelector(".submitBtn").addEventListener("click", function (e) {
+
+          e.preventDefault()
+          e.stopPropagation()
+
+          console.log("클릭 감지")
+
+          const target = document.querySelector(".uploadHidden")
+
+          console.log("uploadHidden 감지")
+
+          const uploadFiles = uploadResult.querySelectorAll("img")
+
+          console.log("img 요소 전부 선택")
+
+          let str = ''
+
+          for (let i = 0; i < uploadFiles.length; i++) {
+              const uploadFile = uploadFiles[i]
+              const imgLink = uploadFile.getAttribute("data-src")
+
+              str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+              console.log("이미지 str 추가")
+          }
+
+          target.innerHTML = str;
+          console.log("innerHTML")
+
+          const formObj = document.querySelector("form");
+          console.log("form 감지")
+
+          formObj.submit();
+          console.log("submit")
+          formObj.reset();
+
+      }, false)
+
+      const closeUploadBtn = document.querySelector(".closeUploadBtn")
+
+      // 파일 업로드 취소 버튼 클릭 시 모달 숨기기
+      closeUploadBtn.addEventListener("click", function (e) {
+          console.log("모달 숨기기")
+          uploadModal.hide()
+      }, false)
+
+  </script>

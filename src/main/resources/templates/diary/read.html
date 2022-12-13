@@ -19,7 +19,7 @@
           <li class="list-group-item">
             <div>
               <h6 class="my-0">장소명</h6>
-              <input type="text" class="form-control" placeholder="장소명" th:value="${dto.placename}" readonly>
+              <input type="text" class="form-control" placeholder="장소명" th:value="${dto.placeName}" readonly>
             </div>
           </li>
           <li class="list-group-item">
@@ -62,6 +62,11 @@
 
           <div class="col-12">
             <span class="input-group-text">사진</span>
+            <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                <img class="card-img-top"
+                     th:each="fileName: ${dto.fileNames}"
+                     th:src="|/view/${fileName}|">
+            </div>
           </div>
 
           <div class="col-12">
