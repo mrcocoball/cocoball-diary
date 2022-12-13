@@ -4,9 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -39,7 +41,7 @@ public class Article extends AuditingFields {
 
     @Setter
     @Column
-    private String placename;
+    private String placeName;
 
     @Setter
     @Column
@@ -56,25 +58,46 @@ public class Article extends AuditingFields {
             fetch = FetchType.LAZY,
             orphanRemoval = true)
     @Builder.Default
-    private Set<Image> images = new LinkedHashSet<>();
+    @BatchSize(size = 20)
+    private Set<Image> images = new HashSet<>();
 
 
     protected Article() {
     }
 
-    private Article(User user, String title, String description, Long score, String placename, String address) {
+    private Article(User user, String title, String description, Long score, String placeName, String address) {
 
         this.user = user;
         this.title = title;
         this.description = description;
         this.score = score;
-        this.placename = placename;
+        this.placeName = placeName;
         this.address = address;
     }
 
-    public static Article of(User user, String title, String description, Long score, String placename, String address) {
-        return new Article(user, title, description, score, placename, address);
+    public static Article of(User user, String title, String description, Long score, String placeName, String address) {
+        return new Article(user, title, description, score, placeName, address);
     }
+
+    public void addImage(String uuid, String fileName) {
+
+   		Image image = Image.builder()
+   						.uuid(uuid)
+   						.fileName(fileName)
+   						.article(this)
+   						.ord(images.size())
+   						.build();
+   		images.add(image);
+   	}
+
+
+   	public void clearImages() {
+
+   		images.forEach(image -> image.changeArticle(null));
+
+   		this.images.clear();
+
+   	}
 
     @Override
     public boolean equals(Object o) {
