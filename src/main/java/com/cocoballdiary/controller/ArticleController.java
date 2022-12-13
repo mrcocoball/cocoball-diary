@@ -1,6 +1,7 @@
 package com.cocoballdiary.controller;
 
 import com.cocoballdiary.dto.ArticleDto;
+import com.cocoballdiary.dto.ArticleWithImageDto;
 import com.cocoballdiary.dto.PageRequestDto;
 import com.cocoballdiary.dto.PageResponseDto;
 import com.cocoballdiary.service.ArticleService;
@@ -8,6 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,7 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,13 +34,16 @@ import java.util.Map;
 @Log4j2
 public class ArticleController {
 
+    @Value("${com.cocoballdiary.upload.path}")
+    private String uploadPath;
+
     private final ArticleService articleService;
 
     @Operation(summary = "Article List", description = "[GET] 게시글 리스트 조회")
     @GetMapping("/list")
     public void getArticleList(PageRequestDto pageRequestDto, Model model) {
 
-        PageResponseDto<ArticleDto> responseDto = articleService.getArticleList(pageRequestDto);
+        PageResponseDto<ArticleWithImageDto> responseDto = articleService.getArticleList(pageRequestDto);
 
         model.addAttribute("responseDto", responseDto);
     }
@@ -43,7 +53,7 @@ public class ArticleController {
     @GetMapping({"/read", "/modify"})
     public void getArticle(Long aid, PageRequestDto pageRequestDto, Model model) {
 
-        ArticleDto articleDto = articleService.getArticle(aid);
+        ArticleDto articleDto = articleService.getArticleWithImage(aid);
 
         model.addAttribute("dto", articleDto);
 
@@ -51,7 +61,8 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/write")
-    public void writeGET() {}
+    public void writeGET() {
+    }
 
     @Operation(summary = "Article POST", description = "[POST] 게시글 작성")
     @PostMapping("/write")
@@ -64,10 +75,12 @@ public class ArticleController {
         if (bindingResult.hasErrors()) {
             log.error("has errors");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/diary/list";
+            return "redirect:/diary/write";
         }
 
         Long aid = articleService.writeArticle(articleDto);
+
+        log.info(aid);
 
         redirectAttributes.addFlashAttribute("result", aid);
 
@@ -110,14 +123,44 @@ public class ArticleController {
 
         log.info("delete...");
 
+        ArticleDto articleDto = articleService.getArticle(aid);
         articleService.deleteArticle(aid);
 
-        // TODO: 게시물 내 첨부 파일 삭제 추가 필요
+        // 첨부 파일 삭제 처리
+        List<String> fileNames = articleDto.getFileNames();
+        if (fileNames != null && fileNames.size() > 0) {
+            removeFiles(fileNames);
+        }
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/diary/list";
 
+    }
+
+    public void removeFiles(List<String> files) {
+
+        for (String fileName : files) {
+
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+            String resourceName = resource.getFilename();
+
+
+            try {
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+                resource.getFile().delete();
+
+                //섬네일이 존재한다면
+                if (contentType.startsWith("image")) {
+                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
+                    thumbnailFile.delete();
+                }
+
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+
+        }
     }
 
 }

@@ -6,7 +6,7 @@ server:
 
 logging:
   level:
-    com.agencyplatformclonecoding: debug
+    com.cocoballdiary: debug
     org.springframework.web.servlet: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 
@@ -44,5 +44,17 @@ spring:
             client-secret: rxVc2xcLAwmFyN8bq2yTIOIT2CTHxZhf
             client-authentication-method: POST
             scope: profile_nickname, account_email
+  servlet:
+    multipart:
+      enabled: true
+      location: C:\\upload
+      max-request-size: 2MB
+      max-file-size: 1MB
+
+com:
+  cocoballdiary:
+    upload:
+      path: C:\\upload
+      # 테스트 이후 웹 서버 배포 시에는 가상 서버의 경로로 지정 필요, https://blog.jiniworld.me/28 참조
 
 ---

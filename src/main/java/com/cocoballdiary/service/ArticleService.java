@@ -3,6 +3,7 @@ package com.cocoballdiary.service;
 import com.cocoballdiary.domain.Article;
 import com.cocoballdiary.domain.User;
 import com.cocoballdiary.dto.ArticleDto;
+import com.cocoballdiary.dto.ArticleWithImageDto;
 import com.cocoballdiary.dto.PageRequestDto;
 import com.cocoballdiary.dto.PageResponseDto;
 import com.cocoballdiary.exception.DiaryException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,79 +29,63 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ArticleService {
 
-	private final ArticleRepository articleRepository;
-	private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
+    public PageResponseDto<ArticleWithImageDto> getArticleList(PageRequestDto pageRequestDto) {
 
-	/*
-	public PageResponseDto<ArticleDto> getArticleList(PageRequestDto pageRequestDto) {
+        String[] types = pageRequestDto.getTypes(); // title, description, uid
+        String keyword = pageRequestDto.getKeyword();
+        Pageable pageable = pageRequestDto.getPageable("aid");
 
-		// 페이징 처리
-		Pageable pageable = PageRequest.of(pageRequestDto.getPage() <=0? 0 : pageRequestDto.getPage() -1,
-				pageRequestDto.getSize(),
-				Sort.by("aid").descending());
+        Page<ArticleWithImageDto> result = articleRepository.searchAll(types, keyword, pageable);
 
-		Page<Article> result = articleRepository.findAll(pageable);
+        return PageResponseDto.<ArticleWithImageDto>withAll()
+                .pageRequestDto(pageRequestDto)
+                .dtoList(result.getContent())
+                .total((int) result.getTotalElements())
+                .build();
+    }
 
-		List<ArticleDto> dtoList =
-			result.getContent().stream().map(ArticleDto::from).collect(Collectors.toList());
+    public ArticleDto getArticle(Long aid) {
+        return articleRepository.findByAid(aid).map(ArticleDto::from)
+                .orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
 
-		return PageResponseDto.<ArticleDto>withAll()
-				.pageRequestDto(pageRequestDto)
-				.dtoList(dtoList)
-				.total((int)result.getTotalElements())
-				.build();
-	}
-	 */
+    }
 
-	public PageResponseDto<ArticleDto> getArticleList(PageRequestDto pageRequestDto) {
+    public ArticleDto getArticleWithImage(Long aid) {
 
-		String[] types = pageRequestDto.getTypes(); // title, description, uid
-		String keyword = pageRequestDto.getKeyword();
-		Pageable pageable = pageRequestDto.getPageable("aid");
+        return articleRepository.findByIdWithImages(aid).map(ArticleDto::from)
+                .orElseThrow(() -> new DiaryException(ErrorCode.USER_NOT_FOUND));
+    }
 
-		Page<ArticleDto> result = articleRepository.searchAll(types, keyword, pageable);
+    public Long writeArticle(ArticleDto articleDto) {
 
-		return PageResponseDto.<ArticleDto>withAll()
-				.pageRequestDto(pageRequestDto)
-				.dtoList(result.getContent())
-				.total((int)result.getTotalElements())
-				.build();
-	}
+        log.info(articleDto.getScore());
 
-	public ArticleDto getArticle(Long aid) {
-		return articleRepository.findByAid(aid).map(ArticleDto::from)
-									.orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
+        User user = userRepository.getReferenceById(articleDto.getUid());
+        Long aid = articleRepository.save(articleDto.toEntity(user)).getAid();
 
-	}
+        return aid;
 
-	public Long writeArticle(ArticleDto articleDto) {
+    }
 
-		log.info(articleDto.getScore());
+    public void modifyArticle(ArticleDto articleDto) {
 
-		User user = userRepository.getReferenceById(articleDto.getUid());
-		Long aid = articleRepository.save(articleDto.toEntity(user)).getAid();
+        Article article = articleRepository.findByAid(articleDto.getAid())
+                .orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
 
-		return aid;
+        article.setTitle(articleDto.getTitle());
+        article.setDescription(articleDto.getDescription());
+        article.setScore(articleDto.getScore());
+        article.setPlaceName(articleDto.getPlaceName());
+        article.setAddress(articleDto.getAddress());
 
-	}
+        articleRepository.save(article);
+    }
 
-	public void modifyArticle(ArticleDto articleDto) {
-
-		Article article = articleRepository.findByAid(articleDto.getAid())
-									.orElseThrow(() -> new DiaryException(ErrorCode.ARTICLE_NOT_FOUND));
-
-		article.setTitle(articleDto.getTitle());
-		article.setDescription(articleDto.getDescription());
-		article.setScore(articleDto.getScore());
-		article.setPlacename(articleDto.getPlacename());
-		article.setAddress(articleDto.getAddress());
-
-		articleRepository.save(article);
-	}
-
-	public void deleteArticle(Long aid) {
-		articleRepository.deleteByAid(aid);
-	}
+    public void deleteArticle(Long aid) {
+        articleRepository.deleteByAid(aid);
+    }
 
 }
