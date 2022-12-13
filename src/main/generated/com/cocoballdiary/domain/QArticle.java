@@ -38,7 +38,7 @@ public class QArticle extends EntityPathBase<Article> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final StringPath placename = createString("placename");
+    public final StringPath placeName = createString("placeName");
 
     public final NumberPath<Long> score = createNumber("score", Long.class);
 
