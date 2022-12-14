@@ -113,7 +113,7 @@ public class ArticleDto {
 
         List<String> fileNames = this.fileNames;
 
-        if(fileNames != null){
+        if (fileNames != null) {
             fileNames.forEach(fileName -> {
                 String[] arr = fileName.split("_");
                 article.addImage(arr[0], arr[1]);

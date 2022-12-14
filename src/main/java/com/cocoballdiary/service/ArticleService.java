@@ -81,6 +81,16 @@ public class ArticleService {
         article.setPlaceName(articleDto.getPlaceName());
         article.setAddress(articleDto.getAddress());
 
+        // 첨부파일 처리
+        article.clearImages();
+
+        if(articleDto.getFileNames() != null) {
+            for (String fileName : articleDto.getFileNames()) {
+                String[] arr = fileName.split("_");
+                article.addImage(arr[0], arr[1]);
+            }
+        }
+
         articleRepository.save(article);
     }
 

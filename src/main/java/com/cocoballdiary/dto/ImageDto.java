@@ -13,24 +13,24 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ImageDto {
 
-	private String uuid;
-	private String fileName;
-	private int ord;
+    private String uuid;
+    private String fileName;
+    private int ord;
 
 
-	public static ImageDto of(String uuid, String fileName, int ord) {
+    public static ImageDto of(String uuid, String fileName, int ord) {
 
-		return new ImageDto(uuid, fileName, ord);
+        return new ImageDto(uuid, fileName, ord);
 
-	}
+    }
 
-	// Entity -> Dto
-	public static ImageDto from(Image entity) {
+    // Entity -> Dto
+    public static ImageDto from(Image entity) {
 
-		return new ImageDto(
-				entity.getUuid(),
-				entity.getFileName(),
-				entity.getOrd()
-		);
-	}
+        return new ImageDto(
+                entity.getUuid(),
+                entity.getFileName(),
+                entity.getOrd()
+        );
+    }
 }
