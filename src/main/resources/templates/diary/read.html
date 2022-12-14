@@ -55,13 +55,10 @@
             <label for="title" class="form-label">제목</label>
             <input type="text" class="form-control" name="title" id="title" placeholder="" th:value="${dto.title}"
                    readonly>
-            <div class="invalid-feedback">
-              제목을 적어주세요.
-            </div>
           </div>
 
           <div class="col-12">
-            <span class="input-group-text">사진</span>
+            <label class="form-label">사진</label>
             <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
                 <img class="card-img-top"
                      th:each="fileName: ${dto.fileNames}"
@@ -73,9 +70,6 @@
             <label for="description" class="form-label">내용</label>
             <textarea class="form-control" name="description" id="description" rows="5" placeholder="" value=""
                       readonly>[[${dto.description}]]</textarea>
-            <div class="invalid-feedback">
-              내용을 적어주세요.
-            </div>
           </div>
 
           <div class="col-12">
