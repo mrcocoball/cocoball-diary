@@ -29,7 +29,7 @@
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">주소</h6>
-                <input type="text" class="form-control" name="address" id="address" placeholder="주소" required>
+                <input type="text" class="form-control" name="address" id="address" placeholder="도로명 / 지번 주소" required>
                 <div class="invalid-feedback">
                   주소를 적어주세요.
                 </div>
@@ -106,7 +106,7 @@
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <input type="file" name="files" class="form-control" accept=".png, .jpeg" multiple>
+            <input type="file" name="files" class="form-control" accept=".png, .jpeg, .jpg" multiple>
           </div>
         </div>
         <div class="modal-footer">
@@ -121,7 +121,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/form-validation.js"></script>
-
 
   <script layout:fragment="script" th:inline="javascript">
 
