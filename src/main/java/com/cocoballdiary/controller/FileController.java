@@ -61,7 +61,7 @@ public class FileController {
 
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
 
-                        Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
+                        Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 400, 400);
                     }
 
                 } catch (IOException e) {
