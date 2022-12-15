@@ -47,7 +47,7 @@
             <div class="card shadow-sm">
               <div class="card" th:if="${dto.images != null && dto.images.size() > 0}">
                 <img class="card-img-top"
-                     th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="225">
+                     th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="300">
               </div>
               <svg th:if="${dto.images == null || dto.images.size() == 0}" class="bd-placeholder-img card-img-top"
                    width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
