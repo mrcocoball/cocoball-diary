@@ -2,6 +2,7 @@ package com.cocoballdiary.config;
 
 import com.cocoballdiary.dto.security.CustomUserDetailsService;
 import com.cocoballdiary.dto.security.handler.Custom403ExceptionHandler;
+import com.cocoballdiary.dto.security.handler.CustomLoginFailureHandler;
 import com.cocoballdiary.dto.security.handler.CustomSocialLoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -32,15 +34,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.formLogin().loginPage("/user/login").and().logout().logoutSuccessUrl("/");
+        http.formLogin().loginPage("/user/login").failureHandler(authenticationFailureHandler()).and().logout().logoutSuccessUrl("/");
 
         http.csrf().disable();
 
-        /* http.rememberMe()
-                .key("12345678")
+        http.rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30); */
+                .tokenValiditySeconds(60 * 60 * 24 * 30);
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler()); // 403 에러 처리
 
@@ -62,6 +63,7 @@ public class SecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
 
@@ -80,6 +82,10 @@ public class SecurityConfig {
         return new CustomSocialLoginSuccessHandler(passwordEncoder());
     }
 
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomLoginFailureHandler();
+    }
 
 
 }
