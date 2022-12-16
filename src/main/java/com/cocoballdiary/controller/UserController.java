@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -46,9 +47,9 @@ public class UserController {
         return "redirect:/user/login";
     }
 
-    @GetMapping("/login")
-    public void loginGet(String error, String logout) {
-
+    @RequestMapping(value={"/", "/login"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String loginGet() {
+		return "user/login";
     }
 
     @GetMapping("/modify")

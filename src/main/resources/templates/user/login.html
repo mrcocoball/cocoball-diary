@@ -20,7 +20,9 @@
 <main class="form-signin w-100 m-auto">
   <img class="mb-4" src="/images/login.png" alt="" width="72" height="57">
   <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
+  <th:block th:if="${param.error}">
+    <p class="error-message" style="color: crimson" th:text="${errorMessage}">로그인 실패!</p>
+  </th:block>
   <form id="registerForm" action="/user/login" method="post">
     <div class="form-floating">
       <input type="text" class="form-control" name="username" id="floatingInput" placeholder="USER ID">
@@ -33,7 +35,7 @@
 
     <div class="checkbox mb-3">
       <label>
-        <input type="checkbox" value="remember-me"> Remember me
+        <input type="checkbox" name="remember-me"> Remember me
       </label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">LOGIN</button>
