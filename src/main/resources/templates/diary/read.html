@@ -85,19 +85,26 @@
             <div class="float-end" th:with="link = ${pageRequestDto.getLink()}">
               <a th:if="${user != null && user.username == dto.uid}"
                  th:href="|@{/diary/modify(aid=${dto.aid})}&${link}|" class="text-decoration-none">
-                <button type="button" class="btn btn-secondary">게시글 수정</button>
+                <button type="button" class="btn btn-update text-white">게시글 수정</button>
               </a>
               <a th:if="${user != null && user.username == dto.uid}">
                 <button type="button" th:if="${user != null && user.username == dto.uid}" class="btn btn-danger deleteBtn">게시글 삭제</button>
               </a>
               <a th:href="|@{/diary/list}?${link}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">게시글 목록</button>
+                <button type="button" class="btn btn-read">게시글 목록</button>
               </a>
-              <button class="btn btn-info addCommentBtn">댓글 작성</button>
+
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-12" style="margin-top: 30px">
+            <div>
+              <h4 class="mb-3" style="display:inline">댓글</h4>
+              <button class="btn btn-create text-white addCommentBtn float-end">댓글 작성</button>
+            </div>
+
+            <hr class="my-4">
+
             <div class="col-md-12">
               <ul class="list-group commentList">
               </ul>
@@ -136,7 +143,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary writeBtn">등록</button>
+          <button type="button" class="btn btn-create text-white writeBtn">등록</button>
           <button type="button" class="btn btn-outline-dark closeWriteBtn">취소</button>
         </div>
       </div>
@@ -158,8 +165,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-info modifyBtn">수정</button>
-          <button type="button" class="btn btn-danger removeBtn">삭제</button>
+          <button type="button" class="btn btn-update text-white modifyBtn">수정</button>
+          <button type="button" class="btn btn-delete text-white removeBtn">삭제</button>
           <button type="button" class="btn btn-outline-dark closeModifyBtn">취소</button>
         </div>
       </div>
