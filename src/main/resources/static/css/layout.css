@@ -11,6 +11,15 @@ html, body {
     background-color: rgba(228, 119, 108);
 }
 
+.mainfooter {
+    background-color: rgb(45, 39, 39);
+}
+
+.mainfooter > p {
+    color: white;
+    text-align: center;
+}
+
 #place-star fieldset{
     display: inline-block;
     direction: rtl;
@@ -75,4 +84,70 @@ html, body {
 
 .btn-delete:hover {
     background-color: rgb(183, 17, 1);
+}
+
+.btn-create > a:link {
+    color : white;
+    text-decoration: none;
+}
+
+.btn-create > a:visited {
+    color : white;
+    text-decoration: none;
+}
+
+.btn-create > a:hover {
+    color : white;
+    text-decoration: none;
+}
+
+.btn-create > a:active {
+    color : white;
+    text-decoration: none;
+}
+
+.btn-score {
+    color: gold;
+    border-color: rgba(228, 119, 108);
+}
+
+.btn-score:hover {
+    color: gold;
+    border-color: rgba(228, 119, 108);
+}
+
+.page-link {
+  color: rgba(228, 119, 108);
+  background-color: #fff;
+  border: 1px solid rgba(228, 119, 108);
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: #ffffff;
+ background-color: rgba(228, 119, 108);
+ border-color: rgba(228, 119, 108);
+
+}
+
+.page-link:focus, .page-link:hover {
+  color: rgba(228, 119, 108);
+  background-color: #fafafa;
+  border-color: rgba(228, 119, 108);
+}
+
+.card-text-user {
+    font-size: smaller;
+    margin-bottom: 0px;
+}
+
+.card-text-address {
+    font-size: smaller;
+    margin-top: 0px;
+}
+
+.card-text-placename {
+    font-size: smaller;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
