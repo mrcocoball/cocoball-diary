@@ -19,13 +19,13 @@
           <li class="list-group-item">
             <div>
               <h6 class="my-0">장소명</h6>
-              <input type="text" class="form-control" placeholder="장소명" th:value="${dto.placeName}" readonly>
+              <input type="text" class="form-control" placeholder="장소명" th:value="${dto.placeName}" readonly="readonly">
             </div>
           </li>
           <li class="list-group-item">
             <div>
               <h6 class="my-0">주소</h6>
-              <input type="text" class="form-control" placeholder="주소" th:value="${dto.address}" readonly>
+              <input type="text" class="form-control" placeholder="주소" th:value="${dto.address}" readonly="readonly">
             </div>
           </li>
           <li class="list-group-item" id="place-star">
@@ -57,28 +57,32 @@
           <div class="col-12">
             <label for="title" class="form-label">제목</label>
             <input type="text" class="form-control" name="title" id="title" placeholder="" th:value="${dto.title}"
-                   readonly>
+                   readonly="readonly">
           </div>
 
           <div class="col-12">
             <label class="form-label">사진</label>
             <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
-                <img class="card-img-top"
-                     th:each="fileName: ${dto.fileNames}"
-                     th:src="|/view/${fileName}|">
+              <img class="card-img-top"
+                   th:each="fileName: ${dto.fileNames}"
+                   th:src="|/view/${fileName}|">
+            </div>
+            <div class="card" th:if="${dto.fileNames == null || dto.fileNames.size() == 0}">
+              <img class="card-img-top" src="/images/not_found_img.png">
+              <h4 style="text-align: center">사진이 아직 없네요??</h4>
             </div>
           </div>
 
           <div class="col-12">
             <label for="description" class="form-label">내용</label>
             <textarea class="form-control" name="description" id="description" rows="5" placeholder="" value=""
-                      readonly>[[${dto.description}]]</textarea>
+                      readonly="readonly">[[${dto.description}]]</textarea>
           </div>
 
           <div class="col-12">
             <label for="uid" class="form-label">작성자</label>
             <input type="text" class="form-control" name="uid" id="uid" placeholder=""
-                   th:value="${dto.uid}" readonly>
+                   th:value="${dto.uid}" readonly="readonly">
           </div>
 
           <div class="col-12" th:with="user=${#authentication.principal}">
@@ -88,7 +92,7 @@
                 <button type="button" class="btn btn-update text-white">게시글 수정</button>
               </a>
               <a th:if="${user != null && user.username == dto.uid}">
-                <button type="button" th:if="${user != null && user.username == dto.uid}" class="btn btn-danger deleteBtn">게시글 삭제</button>
+                <button type="button" th:if="${user != null && user.username == dto.uid}" class="btn btn-delete text-white deleteBtn">게시글 삭제</button>
               </a>
               <a th:href="|@{/diary/list}?${link}|" class="text-decoration-none">
                 <button type="button" class="btn btn-read">게시글 목록</button>
@@ -135,11 +139,11 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">댓글 내용</span>
-            <input type="text" class="form-control commentDescription">
+            <textarea type="text" class="form-control commentDescription" rows="1" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
           </div>
-          <div class="input-group mb-3" th:with="user=${#authentication.principal}">
-            <span class="input-group-text">작성자　</span>
-            <input type="text" class="form-control commentUid" th:value="${user.username}" readonly>
+          <div class="input-group mb-3" th:with="user=${#authentication.principal}" hidden>
+            <span class="input-group-text">작성자</span>
+            <input type="text" class="form-control commentUid" th:value="${user.username}" readonly="readonly">
           </div>
         </div>
         <div class="modal-footer">
@@ -155,13 +159,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title commentHeader"></h5>
+          <h5 class="modal-title commentHeader" hidden></h5>
+          <h5>댓글 수정 (최대 100자)</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">댓글 내용</span>
-            <input type="text" class="form-control modifyCommentDescription">
+            <textarea type="text" class="form-control modifyCommentDescription" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -227,12 +232,12 @@
 
               for (const dto of dtoList) {
 
-                  str += `<li class="list-group-item d-flex commentItem">
-                           <span class="col-1">${dto.cid}</span>
-                           <span class="col-6" data-cid="${dto.cid}">${dto.commentDescription}</span>
-                           <span class="col-3">${dto.commentUid}</span>
-                           <span class="col-2">${dto.createdAt} </span>
-                         </li>`
+                  str += `<p class="comment-user" style="margin-top: 10px; font-weight: bold">${dto.commentUid}</p>
+                           <li class="list-group-item d-flex commentItemDetail">
+                            <p class="col-1" hidden>${dto.cid}</p>
+                            <p class="col-9" data-cid="${dto.cid}">${dto.commentDescription}</p>
+                            <p class="col-3" style="text-align: center">${dto.createdAt} </p>
+                           </li>`
               }
           }
           commentList.innerHTML = str
@@ -273,6 +278,13 @@
               console.error(e)
           })
 
+      }
+
+      // textarea 자동 크기 조절
+
+      function resize(obj) {
+          obj.style.height = '1px';
+          obj.style.height = (12 + obj.scrollHeight) + 'px';
       }
 
 
@@ -363,7 +375,7 @@
 
           const target = e.target
 
-          if (!target || target.tagName != 'SPAN') {
+          if (!target || target.tagName != 'P') {
               return
           }
 
@@ -375,12 +387,18 @@
 
           getComment(cid).then(comment => { //댓글의 내용을 모달창에 채워서 보여주는
 
-              console.log(comment)
-              commentHeader.innerHTML = comment.cid
-              modifyCommentDescription.value = comment.commentDescription
-              modifyModal.show()
-
               hasAuth = currentUser === comment.commentUid //댓글의 작성자와 현재 사용자 일치 여부 확인
+
+              console.log(comment)
+              console.log(hasAuth)
+
+              if (hasAuth) {
+                  commentHeader.innerHTML = comment.cid
+                  modifyCommentDescription.value = comment.commentDescription
+                  modifyModal.show()
+              } else {
+                  return
+              }
 
           }).catch(e => alert('error'))
 
