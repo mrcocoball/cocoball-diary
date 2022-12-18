@@ -29,8 +29,8 @@
                 </div>
                 <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
-                  <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                  <button class="btn btn-create text-white searchBtn" type="submit">검색</button>
+                  <button class="btn btn-read clearBtn" type="button">초기화</button>
                 </div>
               </div>
             </div>
@@ -49,22 +49,30 @@
                 <img class="card-img-top"
                      th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="300">
               </div>
+              <div class="card" th:if="${dto.images == null || dto.images.size() == 0}">
+                <img class="card-img-top"
+                     src="/images/not_found_img.png" height="300">
+              </div>
+              <!--
               <svg th:if="${dto.images == null || dto.images.size() == 0}" class="bd-placeholder-img card-img-top"
                    width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
                    role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
                    focusable="false">
                 <rect width="100%" height="100%" fill="#55595c"/>
               </svg>
+              -->
 
               <div class="card-body">
-                <p class="card-text">#[[${dto.aid}]] [[${dto.title}]]</p>
+                <p class="card-text" style="font-weight: bold">#[[${dto.aid}]] [[${dto.title}]]</p>
+                <p class="card-text-user">작성자 : [[${dto.uid}]]</p>
+                <p th:if="${dto.placeName != null}" class="card-text-placename">장소명 : [[${dto.placeName}]]</p>
+                <p th:if="${dto.address != null}" class="card-text-address">주소명 : [[${dto.address}]]</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary"><a th:href="|@{/diary/read(aid =${dto.aid})}|">보기</a></button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">&#10029;[[${dto.score}]]</button>
+                    <button type="button" class="btn btn-sm btn-create text-white"><a th:href="|@{/diary/read(aid =${dto.aid})}|">보기</a></button>
+                    <button type="button" class="btn btn-sm btn-score">&#10029;[[${dto.score}]]</button>
                   </div>
-                  <small class="text-muted">[[${dto.uid}]] · [[${#temporals.format(dto.createdAt,
-                    'yyyy-MM-dd')}]]</small>
+                  <small class="text-muted">[[${#temporals.format(dto.createdAt, 'yyyy-MM-dd')}]]</small>
                 </div>
               </div>
             </div>

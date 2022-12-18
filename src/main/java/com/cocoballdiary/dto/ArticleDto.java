@@ -33,10 +33,8 @@ public class ArticleDto {
     @Max(5)
     private Long score;
 
-    @NotEmpty
     private String placeName;
 
-    @NotEmpty
     private String address;
 
     // 첨부파일 이름 리스트

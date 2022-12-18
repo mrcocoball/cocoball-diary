@@ -9,6 +9,7 @@ import com.cocoballdiary.dto.PageResponseDto;
 import com.cocoballdiary.exception.DiaryException;
 import com.cocoballdiary.exception.ErrorCode;
 import com.cocoballdiary.repository.ArticleRepository;
+import com.cocoballdiary.repository.CommentRepository;
 import com.cocoballdiary.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
     public PageResponseDto<ArticleWithImageDto> getArticleList(PageRequestDto pageRequestDto) {
@@ -95,6 +97,7 @@ public class ArticleService {
     }
 
     public void deleteArticle(Long aid) {
+        commentRepository.deleteByArticle_Aid(aid);
         articleRepository.deleteByAid(aid);
     }
 
