@@ -25,7 +25,7 @@
           <li class="list-group-item">
             <div>
               <h6 class="my-0">주소</h6>
-              <input type="text" class="form-control" placeholder="주소" th:value="${dto.address}" readonly="readonly">
+              <textarea class="form-control" placeholder="주소" readonly="readonly">[[${dto.address}]]</textarea>
             </div>
           </li>
           <li class="list-group-item" id="place-star">
@@ -76,7 +76,7 @@
           <div class="col-12">
             <label for="description" class="form-label">내용</label>
             <textarea class="form-control" name="description" id="description" rows="5" placeholder="" value=""
-                      readonly="readonly">[[${dto.description}]]</textarea>
+                      readonly="readonly" onkeydown="resize(this)" onkeyup="resize(this)">[[${dto.description}]]</textarea>
           </div>
 
           <div class="col-12">
@@ -205,6 +205,13 @@
 
       }
 
+      // textarea 자동 크기 조절
+
+      function resize(obj) {
+          obj.style.height = '1px';
+          obj.style.height = (12 + obj.scrollHeight) + 'px';
+      }
+
       // 게시글 삭제
       // thymeleaf 조건문으로 인해 deleteBtn이 출력되지 않을 수 있어 null check를 해야 함
       // (안 그러면 addEventListener null 처리되어 전체 JS 코드가 실행되지 않는다)
@@ -279,14 +286,6 @@
           })
 
       }
-
-      // textarea 자동 크기 조절
-
-      function resize(obj) {
-          obj.style.height = '1px';
-          obj.style.height = (12 + obj.scrollHeight) + 'px';
-      }
-
 
       // 댓글 등록 관련
       const writeModal = new bootstrap.Modal(document.querySelector(".writeModal"))

@@ -29,7 +29,7 @@
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">주소</h6>
-                <input type="text" class="form-control" name="address" id="address" placeholder="도로명 / 지번 주소" required>
+                <textarea type="text" class="form-control" name="address" id="address" placeholder="도로명 / 지번 주소" required></textarea>
                 <div class="invalid-feedback">
                   주소를 적어주세요.
                 </div>
@@ -186,10 +186,10 @@
           const str = `<div class="card col-4 imageCard">
                   <div class="card-header d-flex justify-content-center">
                       ${fileName}
-                      <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+                      <button type="button" class="btn btn-danger btn-sm" onclick="javascript:removeFile('${uuid}', '${fileName}', this)">X</button>
                   </div>
                   <div class="card-body">
-                       <img src="/view/${link}" data-src="${uuid + "_" + fileName}" >
+                       <img class="card-img-top" src="/view/${link}" data-src="${uuid + "_" + fileName}" >
                   </div>
               </div><!-- card -->`
 
@@ -256,3 +256,4 @@
       }, false)
 
   </script>
+</div>

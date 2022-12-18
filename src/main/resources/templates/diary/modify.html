@@ -29,7 +29,7 @@
             <li class="list-group-item">
               <div>
                 <h6 class="my-0">주소</h6>
-                <input type="text" class="form-control" name="address" id="address" placeholder="도로명 / 지번 주소" th:value="${dto.address}" required>
+                <textarea type="text" class="form-control" name="address" id="address" placeholder="도로명 / 지번 주소" required>[[${dto.address}]]</textarea>
                 <div class="invalid-feedback">
                   주소를 적어주세요.
                 </div>
@@ -82,16 +82,16 @@
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-12" hidden>
             <label for="uid" class="form-label">작성자</label>
             <input type="text" class="form-control" name="uid" id="uid" placeholder=""
                    th:value="${dto.uid}" readonly="readonly">
           </div>
 
-          <div>
+          <div hidden>
             <label for="aid" class="form-label">게시글 번호</label>
             <input type="text" class="form-control" name="aid" id="aid" placeholder=""
-                   th:value="${dto.aid}" readonly="readonly" hidden>
+                   th:value="${dto.aid}" readonly="readonly">
           </div>
 
           <div class="col-12">
@@ -114,12 +114,12 @@
           <div class="card col-4 imageCard" th:with="arr = ${fileName.split('_')}">
             <div class="card-header d-flex justify-content-center">
               [[${arr[1]}]]
-              <button class="btn-sm btn-danger"
+              <button type="button" class="btn btn-danger btn-sm"
                       th:onclick="removeFile([[${arr[0]}]], [[${arr[1]}]], this)">X
               </button>
             </div>
-            <div class="card-body">
-              <img th:src="|/view/s_${fileName}|" th:data-src="${fileName}">
+            <div class="card-body" id="image-card-body">
+              <img class="card-img-top" th:src="|/view/s_${fileName}|" th:data-src="${fileName}">
             </div>
           </div>
         </th:block>
@@ -291,10 +291,10 @@
           const str = `<div class="card col-4 imageCard">
                   <div class="card-header d-flex justify-content-center">
                       ${fileName}
-                      <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+                      <button type="button" class="btn btn-danger btn-sm" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
                   </div>
-                  <div class="card-body">
-                       <img src="/view/${link}" data-src="${uuid + "_" + fileName}" >
+                  <div class="card-body" id="image-card-body">
+                       <img class="card-img-top" src="/view/${link}" data-src="${uuid + "_" + fileName}" >
                   </div>
               </div>`
 
