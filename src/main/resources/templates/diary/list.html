@@ -50,8 +50,7 @@
                      th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="300">
               </div>
               <div class="card" th:if="${dto.images == null || dto.images.size() == 0}">
-                <img class="card-img-top"
-                     src="/images/not_found_img.png" height="300">
+                <img class="card-img-top" src="/images/not_found_img.png" height="300">
               </div>
               <!--
               <svg th:if="${dto.images == null || dto.images.size() == 0}" class="bd-placeholder-img card-img-top"
