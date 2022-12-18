@@ -31,10 +31,8 @@ public class ArticleWithImageDto {
     @Max(5)
     private Long score;
 
-    @NotEmpty
     private String placeName;
-
-    @NotEmpty
+    
     private String address;
 
     private List<ImageDto> images;
