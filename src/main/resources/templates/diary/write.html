@@ -221,6 +221,19 @@
           e.preventDefault()
           e.stopPropagation()
 
+          const titleVal = document.getElementById("title").value;
+          const descriptionVal =  document.getElementById("description").value;
+
+          if (!titleVal) {
+              alert("제목을 입력해주세요")
+              return
+          }
+
+          if (!descriptionVal) {
+              alert("내용을 입력해주세요")
+              return
+          }
+
           const target = document.querySelector(".uploadHidden")
 
           const uploadFiles = uploadResult.querySelectorAll("img")
