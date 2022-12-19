@@ -67,8 +67,8 @@
           </div>
 
           <div class="col-12">
-            <label for="descripiton" class="form-label">내용</label>
-            <textarea class="form-control" name="description" id="descripiton" rows="5" placeholder=""
+            <label for="description" class="form-label">내용</label>
+            <textarea class="form-control" name="description" id="description" rows="5" placeholder=""
                       value="" required>[[${dto.description}]]</textarea>
             <div class="invalid-feedback">
               내용을 적어주세요.
@@ -170,6 +170,19 @@
       document.querySelector(".modifyBtn").addEventListener("click", function (e) {
           e.preventDefault()
           e.stopPropagation()
+
+          const titleVal = document.getElementById("title").value;
+          const descriptionVal =  document.getElementById("description").value;
+
+          if (!titleVal) {
+              alert("제목을 입력해주세요")
+              return
+          }
+
+          if (!descriptionVal) {
+              alert("내용을 입력해주세요")
+              return
+          }
 
           alert("게시글이 수정되었습니다.")
 

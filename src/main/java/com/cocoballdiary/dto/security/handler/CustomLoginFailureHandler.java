@@ -24,11 +24,9 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
 
         if (exception instanceof UsernameNotFoundException) {
             errorMessage = "계정이 존재하지 않습니다.";
-        }
-        else if (exception instanceof BadCredentialsException || exception instanceof InternalAuthenticationServiceException) {
+        } else if (exception instanceof BadCredentialsException || exception instanceof InternalAuthenticationServiceException) {
             errorMessage = "아이디나 비밀번호가 맞지 않습니다.";
-        }
-        else {
+        } else {
             errorMessage = "알 수 없는 이유로 로그인에 실패하였습니다.";
         }
 
