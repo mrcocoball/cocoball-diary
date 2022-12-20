@@ -45,22 +45,16 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:with="link = ${pageRequestDto.getLink()}">
           <div class="col" th:each="dto:${responseDto.dtoList}">
             <div class="card shadow-sm">
-              <div class="card" th:if="${dto.images != null && dto.images.size() > 0}">
-                <img class="card-img-top"
-                     th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="300">
-              </div>
-              <div class="card" th:if="${dto.images == null || dto.images.size() == 0}">
-                <img class="card-img-top" src="/images/not_found_img.png" height="300">
-              </div>
-              <!--
-              <svg th:if="${dto.images == null || dto.images.size() == 0}" class="bd-placeholder-img card-img-top"
-                   width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
-                   role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                   focusable="false">
-                <rect width="100%" height="100%" fill="#55595c"/>
-              </svg>
-              -->
-
+              <a th:href="|@{/diary/read(aid =${dto.aid})}|">
+                <div class="card" th:if="${dto.images != null && dto.images.size() > 0}">
+                  <img class="card-img-top"
+                       th:src="|/view/s_${dto.images[0].uuid}_${dto.images[0].fileName}|" height="300">
+                </div>
+                <div class="card" th:if="${dto.images == null || dto.images.size() == 0}">
+                  <img class="card-img-top" src="/images/not_found_img.png" height="300">
+                </div>
+              </a>
+              
               <div class="card-body">
                 <p class="card-text" style="font-weight: bold">#[[${dto.aid}]] [[${dto.title}]]</p>
                 <p class="card-text-user">작성자 : [[${dto.uid}]]</p>
