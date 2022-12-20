@@ -135,29 +135,41 @@
 
       }, false)
 
-      const maxSize = 1 * 1024 * 1024;
+      const maxSize = 2 * 1024 * 1024;
 
       // 파일 업로드 버튼 클릭 시
       document.querySelector(".uploadBtn").addEventListener("click", function (e) {
 
+          const currentLength = document.querySelectorAll(".imageCard").length
+
           // 결과창에 있는 요소를 선택, 몇 개 존재하는지 확인
-          if (document.querySelectorAll(".imageCard").length < 2) {
+          if (currentLength < 2) {
 
               const formObj = new FormData();
 
               const fileInput = document.querySelector("input[name='files']")
 
-              const fileSize = fileInput.files[0].size;
-
-              if(fileSize > maxSize) {
-                  alert("첨부할 수 있는 이미지 파일은 1MB 이하여야 합니다.");
-                  return
-              }
-
               const files = fileInput.files
 
               console.log(fileInput.files)
+              console.log(files.length)
 
+              // 결과창의 이미지 + 업로드하려는 이미지 합계가 2를 넘는지 체크
+              if (currentLength + files.length > 2) {
+                  alert("이미지는 최대 2장까지만 첨부 할 수 있습니다!")
+                  return
+              }
+
+              // 업로드하려는 이미지 용량 체크
+              for (let j = 0; j < files.length; j++) {
+                  const fileSize = files[j].size;
+                  if (fileSize > maxSize) {
+                      alert("첨부할 수 있는 이미지 파일은 2MB 이하여야 합니다.");
+                      return
+                  }
+              }
+
+              // 이미지 개수 제한, 용량 제한 전부 체크 완료된 상태
               for (let i = 0; i < files.length; i++) {
                   formObj.append("files", files[i]);
               }
