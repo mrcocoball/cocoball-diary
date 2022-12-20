@@ -88,7 +88,7 @@ public class ArticleService {
 
         if(articleDto.getFileNames() != null) {
             for (String fileName : articleDto.getFileNames()) {
-                String[] arr = fileName.split("_");
+                String[] arr = fileName.split("_", 2);
                 article.addImage(arr[0], arr[1]);
             }
         }

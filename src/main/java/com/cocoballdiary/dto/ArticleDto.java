@@ -113,7 +113,7 @@ public class ArticleDto {
 
         if (fileNames != null) {
             fileNames.forEach(fileName -> {
-                String[] arr = fileName.split("_");
+                String[] arr = fileName.split("_", 2);
                 article.addImage(arr[0], arr[1]);
             });
         }

@@ -81,23 +81,23 @@ public class Article extends AuditingFields {
 
     public void addImage(String uuid, String fileName) {
 
-   		Image image = Image.builder()
-   						.uuid(uuid)
-   						.fileName(fileName)
-   						.article(this)
-   						.ord(images.size())
-   						.build();
-   		images.add(image);
-   	}
+        Image image = Image.builder()
+                .uuid(uuid)
+                .fileName(fileName)
+                .article(this)
+                .ord(images.size())
+                .build();
+        images.add(image);
+    }
 
 
-   	public void clearImages() {
+    public void clearImages() {
 
-   		images.forEach(image -> image.changeArticle(null));
+        images.forEach(image -> image.changeArticle(null));
 
-   		this.images.clear();
+        this.images.clear();
 
-   	}
+    }
 
     @Override
     public boolean equals(Object o) {
