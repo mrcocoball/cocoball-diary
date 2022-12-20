@@ -4,8 +4,7 @@
 </br></br>
 
 ## 메인 화면
-<img src="https://github.com/mrcocoball/cocoball-diary/blob/main/document/main.png?raw=true">
-</br></br>
+<img src="https://github.com/mrcocoball/cocoball-diary/blob/main/document/main.png?raw=true"></br></br>
 
 ## 사용 스택
 
