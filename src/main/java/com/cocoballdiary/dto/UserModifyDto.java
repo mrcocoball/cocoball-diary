@@ -9,11 +9,13 @@ public class UserModifyDto {
     private String uid;
     private String password;
     private String email;
+    private String introduce;
 
-    private UserModifyDto(String uid, String password, String email) {
+    private UserModifyDto(String uid, String password, String email, String introduce) {
         this.uid = uid;
         this.password = password;
         this.email = email;
+        this.introduce = introduce;
     }
 
     // Entity -> Dto
@@ -21,7 +23,8 @@ public class UserModifyDto {
         return new UserModifyDto(
                 entity.getUid(),
                 entity.getPassword(),
-                entity.getEmail()
+                entity.getEmail(),
+                entity.getIntroduce()
         );
     }
 

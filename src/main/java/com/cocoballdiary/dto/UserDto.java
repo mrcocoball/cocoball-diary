@@ -23,6 +23,8 @@ public class UserDto {
     @NotEmpty
     private String email;
 
+    private String introduce;
+
     private boolean deleted;
 
     private boolean social;
@@ -33,18 +35,19 @@ public class UserDto {
     @JsonIgnore
     private LocalDateTime modifiedAt;
 
-    private UserDto(String uid, String password, String email, boolean deleted, boolean social, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private UserDto(String uid, String password, String email, String introduce, boolean deleted, boolean social, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.uid = uid;
         this.password = password;
         this.email = email;
+        this.introduce = introduce;
         this.deleted = deleted;
         this.social = social;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public static UserDto of(String uid, String password, String email, boolean deleted, boolean social, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        return new UserDto(uid, password, email, deleted, social, createdAt, modifiedAt);
+    public static UserDto of(String uid, String password, String email, String introduce, boolean deleted, boolean social, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        return new UserDto(uid, password, email, introduce, deleted, social, createdAt, modifiedAt);
     }
 
     // Entity -> Dto
@@ -53,6 +56,7 @@ public class UserDto {
                 entity.getUid(),
                 entity.getPassword(),
                 entity.getEmail(),
+                entity.getIntroduce(),
                 entity.isDeleted(),
                 entity.isSocial(),
                 entity.getCreatedAt(),
