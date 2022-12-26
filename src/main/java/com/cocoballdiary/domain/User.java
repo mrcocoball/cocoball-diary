@@ -32,6 +32,9 @@ public class User extends AuditingFields {
     @Column(length = 50, nullable = false)
     private String email;
 
+    @Column(length = 30)
+    private String introduce;
+
     @Column
     private boolean deleted;
 
@@ -46,17 +49,18 @@ public class User extends AuditingFields {
     protected User() {
     }
 
-    private User(String uid, String password, String email, boolean deleted, boolean social) {
+    private User(String uid, String password, String email, String introduce, boolean deleted, boolean social) {
 
         this.uid = uid;
         this.password = password;
         this.email = email;
+        this.introduce = introduce;
         this.deleted = deleted;
         this.social = social;
     }
 
-    public static User of(String uid, String password, String email, boolean deleted, boolean social) {
-        return new User(uid, password, email, deleted, social);
+    public static User of(String uid, String password, String email, String introduce, boolean deleted, boolean social) {
+        return new User(uid, password, email, introduce, deleted, social);
     }
 
     public void changePassword(String password) {
@@ -65,6 +69,10 @@ public class User extends AuditingFields {
 
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void changeIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 
     public void changeDelete(boolean deleted) {
