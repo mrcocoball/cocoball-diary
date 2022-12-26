@@ -53,6 +53,7 @@ public class UserService {
 
         User user = userRepository.findByUid(userModifyDto.getUid()).orElseThrow(() -> new DiaryException(ErrorCode.USER_NOT_FOUND));
         user.changeEmail(userModifyDto.getEmail());
+        user.changeIntroduce(userModifyDto.getIntroduce());
         String encodePassword = passwordEncoder.encode(userModifyDto.getPassword());
         user.changePassword(encodePassword);
 
