@@ -9,6 +9,7 @@ public class UserJoinDto {
     private String uid;
     private String password;
     private String email;
+    private String introduce;
     private boolean deleted;
     private boolean social;
 
@@ -18,6 +19,7 @@ public class UserJoinDto {
                 uid,
                 password,
                 email,
+                introduce,
                 false,
                 false
         );

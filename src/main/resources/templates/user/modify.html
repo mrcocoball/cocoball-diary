@@ -35,6 +35,11 @@
       <label for="floatingPassword">이메일</label>
     </div>
 
+    <div class="form-floating">
+      <input type="introduce" class="form-control" name="introduce" id="floatingIntroduce" th:value="${dto.introduce}">
+      <label for="floatingIntroduce">자기소개(30자 이내)</label>
+    </div>
+
     <div class="my-4">
       <div class="float-end">
         <button type="submit" class="btn btn-primary submitBtn">수정</button>

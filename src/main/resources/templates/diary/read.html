@@ -83,6 +83,8 @@
             <label for="uid" class="form-label">작성자</label>
             <input type="text" class="form-control" name="uid" id="uid" placeholder=""
                    th:value="${dto.uid}" readonly="readonly">
+            <input th:if="${dto.introduce != null}" type="text" class="form-control" name="introduce" id="introduce" placeholder=""
+                   th:value="${dto.introduce}" readonly="readonly">
           </div>
 
           <div class="col-12" th:with="user=${#authentication.principal}">
@@ -114,7 +116,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12" style="margin-bottom: 60px">
             <div class="col">
               <ul class="pagination commentPaging">
               </ul>

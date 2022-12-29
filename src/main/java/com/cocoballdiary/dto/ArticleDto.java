@@ -40,13 +40,15 @@ public class ArticleDto {
     // 첨부파일 이름 리스트
     private List<String> fileNames;
 
+    private String introduce;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
     @JsonIgnore
     private LocalDateTime modifiedAt;
 
-    private ArticleDto(String uid, Long aid, String title, String description, Long score, String placeName, String address, List<String> fileNames, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private ArticleDto(String uid, Long aid, String title, String description, Long score, String placeName, String address, List<String> fileNames, String introduce, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.uid = uid;
         this.aid = aid;
         this.title = title;
@@ -55,17 +57,18 @@ public class ArticleDto {
         this.placeName = placeName;
         this.address = address;
         this.fileNames = fileNames;
+        this.introduce = introduce;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public static ArticleDto of(String uid, Long aid, String title, String description, Long score, String placeName, String address, List<String> filenames, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public static ArticleDto of(String uid, Long aid, String title, String description, Long score, String placeName, String address, List<String> filenames, String introduce, LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
         if (score == null) {
             score = 0L;
         }
 
-        return new ArticleDto(uid, aid, title, description, score, placeName, address, filenames, createdAt, modifiedAt);
+        return new ArticleDto(uid, aid, title, description, score, placeName, address, filenames, introduce, createdAt, modifiedAt);
     }
 
     // Entity -> Dto
@@ -86,6 +89,7 @@ public class ArticleDto {
                 entity.getPlaceName(),
                 entity.getAddress(),
                 fileNames,
+                entity.getUser().getIntroduce(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
         );

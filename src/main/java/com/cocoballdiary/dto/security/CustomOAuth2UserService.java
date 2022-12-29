@@ -59,6 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     email,
                     passwordEncoder.encode("1111"),
                     email,
+                    "",
                     false,
                     true
             );
@@ -68,7 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             // UserSecurityDto 구성 및 반환
 
             UserSecurityDto userSecurityDto =
-                    new UserSecurityDto(email, "1111", email, false, true, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+                    new UserSecurityDto(email, "1111", email, "",false, true, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
             userSecurityDto.setProps(params);
 
             return userSecurityDto;
@@ -81,6 +82,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             user.getUid(),
                             user.getPassword(),
                             user.getEmail(),
+                            user.getIntroduce(),
                             user.isDeleted(),
                             user.isSocial(),
                             user.getRoleSet()

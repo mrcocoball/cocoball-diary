@@ -30,7 +30,7 @@ public class UserService {
 
         boolean exist = userRepository.existsById(uid);
 
-        if(exist) {
+        if (exist) {
             throw new DiaryException(ErrorCode.USER_EXISTS);
         }
 
@@ -53,8 +53,12 @@ public class UserService {
 
         User user = userRepository.findByUid(userModifyDto.getUid()).orElseThrow(() -> new DiaryException(ErrorCode.USER_NOT_FOUND));
         user.changeEmail(userModifyDto.getEmail());
-        String encodePassword = passwordEncoder.encode(userModifyDto.getPassword());
-        user.changePassword(encodePassword);
+        user.changeIntroduce(userModifyDto.getIntroduce());
+        if (!userModifyDto.getPassword().isEmpty()) {
+            log.info("password is not blank");
+            String encodePassword = passwordEncoder.encode(userModifyDto.getPassword());
+            user.changePassword(encodePassword);
+        }
 
         log.info(user);
 

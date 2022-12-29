@@ -18,18 +18,20 @@ public class UserSecurityDto extends User implements OAuth2User {
     private String uid;
     private String password;
     private String email;
+    private String introduce;
     private boolean deleted;
     private boolean social;
 
     private Map<String, Object> props; // 소셜 로그인 정보
 
-    public UserSecurityDto(String username, String password, String email, boolean deleted, boolean social,
+    public UserSecurityDto(String username, String password, String email, String introduce, boolean deleted, boolean social,
                            Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
 
         this.uid = username;
         this.password = password;
         this.email = email;
+        this.introduce = introduce;
         this.deleted = deleted;
         this.social = social;
     }

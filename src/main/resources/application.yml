@@ -50,7 +50,6 @@ spring:
   servlet:
     multipart:
       enabled: true
-      #location: C:\\upload
       location: /home/ubuntu/images
       max-request-size: 5MB
       max-file-size: 3MB
@@ -58,7 +57,6 @@ spring:
 com:
   cocoballdiary:
     upload:
-      #path: C:\\upload
       path: /home/ubuntu/images
       # 테스트 이후 웹 서버 배포 시에는 가상 서버의 경로로 지정 필요, https://blog.jiniworld.me/28 참조
 
