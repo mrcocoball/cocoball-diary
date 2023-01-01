@@ -79,12 +79,17 @@
                       readonly="readonly" onkeydown="resize(this)" onkeyup="resize(this)">[[${dto.description}]]</textarea>
           </div>
 
-          <div class="col-12">
+          <div class="col-12" th:with="link = ${pageRequestDto.getLink()}">
             <label for="uid" class="form-label">작성자</label>
-            <input type="text" class="form-control" name="uid" id="uid" placeholder=""
-                   th:value="${dto.uid}" readonly="readonly">
-            <input th:if="${dto.introduce != null}" type="text" class="form-control" name="introduce" id="introduce" placeholder=""
-                   th:value="${dto.introduce}" readonly="readonly">
+            <div class="card">
+              <div class="card-body">
+                <p th:text="${dto.uid}" class="card-text-uid" name="uid" id="uid" style="font-weight: bold"></p>
+                <p th:if="${dto.introduce != null}" th:text="${dto.introduce}" class="card-text-introduce"></p>
+                <a th:href="|@{/diary/list}?${link}&type=u&keyword=${dto.uid}|" class="text-decoration-none">
+                  <button type="button" class="btn btn-read">작성글 보기</button>
+                </a>
+              </div>
+            </div>
           </div>
 
           <div class="col-12" th:with="user=${#authentication.principal}">
